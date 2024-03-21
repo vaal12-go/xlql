@@ -1,1 +1,74 @@
 lua-test.exe
+foo.db
+UsefulPrograms/SQLiteDatabaseBrowserPortable/*
+*.db
+excel-ark.exe
+test.star
+Example_files/4.*.xlsx
+Example_files/4.1 PSI Ukraine list of active institutions_23Jun2023_13Sep2023.ods
+Example_files/3. Test_excelFileMadeInExcel365_05Sep2023.txt
+Example_files/3. Test_excelFileMadeInExcel365_05Sep2023.xlsx
+Example_files/Projects_discrepancies_17Sep2023_bis.xlsx
+Example_files/Projects_discrepancies_17Sep2023.xlsx
+test_dbs/sqlite_23Sep09-1341.sqbpro
+
+
+tmp/*
+test_dbs/*.db-journal
+
+Example_files/5. Projects_discrepancies_17Sep2023_bis.xlsx
+Example_files/5. Projects_discrepancies_17Sep2023.xlsx
+Example_files/6. PSI Ukraine list of active institutions_23Jun2023_27Nov2023.xlsx
+Example_files/6. RPC01-3201_Site_events_all_countries_27Nov2023.xlsx
+.test_dbs/*.sqlite3
+.test_dbs/*.sqlite3-journal
+.test_dbs/*.sqlite3.bak
+.test_dbs/newDB.sqlite3.bak2
+dir_list.txt
+hello1.txt
+test.star
+qwe1.xlsx
+qwe1.xlsx.bak
+Example_files/7.Simple_example_11Dec2023_table_range.xlsx
+tst_6. RPC01-3201_Site_events_all_countries_27Nov2023.xlsx
+.~lock.tst_6. RPC01-3201_Site_events_all_countries_27Nov2023.xlsx#
+tst_7.Simple_example_11Dec2023_table_range.xlsx
+.test_dbs/tst_8.Simple_example_11Dec2023_table_range_skip_rows.xlsx
+Example_files/8.Simple_example_11Dec2023_table_range_skip_rows.xlsx
+Example_files/ODS 1. Simple_example_10Jun2023.ods
+Example_files/*.xlsx
+Example_files/*.ods
+internals/tests/test_cases/*.ods
+internals/tests/test_cases/*.ods#
+build/*.exe
+Example_files/.~lock.10. PSI Ukraine list of active institutions_23Jun2023_14Dec2023.xlsx#
+.test_dbs/incorrects_SQL.txt
+output.xlsx
+.~lock.output.xlsx#
+output2.xlsx
+PSI Ukraine list of active institutions_23Jun2023_28Dec2023.xlsx
+TimeSheet__detailed_report_by_department_country_for_selected_period_Oct2023.xlsx
+logs.log
+UsefulPrograms/BareTail/baretail.exe
+main.exe
+internals/tests/newDB.sqlite3
+internals/tests/test_cases/07.Simple_example_11Dec2023_table_range.xlsx
+vendor/*.*
+logs.log.bac_09Jan2024
+Example_files/01. Simple_example_10Jun2023.xlsx_Sheet1.png
+TOTALCMD64_vFs0BvTqcc.gif
+starlark/q.txt
+internals/tests/test_cases/.~lock.01.Simple_examples.xlsx#
+cmd/hr_db.sqlite
+cmd/hr_db2.sqlite
+cmd/sampleDB.sqlite
+cmd/employee_dpt.xlsx
+cmd/sin_db.sqlite
+cmd/sinus_graph_data.xlsx
+.test_dbs/newDB.sqlite3.bac
+.test_dbs/newDB.sqlite3.bac2
+Example_files/.~lock.14. 122. PSI Ukraine list of active institutions_23Jun2023_18Mar2024.xlsx#
+better_query.sql
+summary_data_4Contracts_19Mar2024.xlsx
+summary_data_4Contracts_20Mar2024_test.xlsx
+.test_dbs/newDB.sqlite3.bac3
