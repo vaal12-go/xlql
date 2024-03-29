@@ -9,9 +9,6 @@ import (
 	syntax "go.starlark.net/syntax"
 )
 
-//[x]: clean file
-//[x]: review/update logging with logging levels
-
 func ExecStarlarkFile(fName string) *starlark.StringDict {
 	thread := &starlark.Thread{Name: "my thread"}
 	//THis enables while loops outside functions and use of global variables, which can change
@@ -52,6 +49,11 @@ func RegisterExportedFunctions(DefaultDBName string) {
 	PredeclaredDict["list_worksheets"] =
 		starlark.NewBuiltin("list_worksheets",
 			list_worksheets)
+
+	PredeclaredDict["get_datetime_formatted"] =
+		starlark.NewBuiltin("get_datetime_formatted",
+			get_datetime_formatted)
+
 		//TODO: consider if 'defaultDB' is needed at all
 	DefaultDB = NewDatabase(DefaultDBName) //[x]: remove default DB?
 	PredeclaredDict["defaultDB"] =

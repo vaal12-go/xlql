@@ -10,7 +10,13 @@ import (
 var sqliteDBRegistry []*sql.DB = make([]*sql.DB, 0)
 
 func startSQLite(sqlite_file_name string) *sql.DB {
-	db, err := sql.Open("sqlite3_with_extensions", sqlite_file_name)
+	sFName := sqlite_file_name
+	if !(strings.Contains(sFName, ":") || strings.Contains(sFName, "?")) {
+		sFName = "file:" + sqlite_file_name + "?cache=shared&mode=rwc&_busy_timeout=5000"
+	}
+
+	// fmt.Printf("sFName: %v\n", sFName)
+	db, err := sql.Open(driverString, sFName)
 	if err != nil {
 		fmt.Printf("Error opening DB:%s\n", err)
 		log.Fatal(err)
@@ -18,13 +24,11 @@ func startSQLite(sqlite_file_name string) *sql.DB {
 	//TODO: check if this connection already present. Possibly create DB connection right here for the each file separately (this will allow adding plugins)
 	//TODO: check what happens if two connections work on the same file
 	//TODO: add remove connection
-	//TODO: consider making sqliteDBRegistry a map with file name a key
-	//LOW: consider adding an option to create DB in memory
 	sqliteDBRegistry = append(sqliteDBRegistry, db)
 	return db
 } //func startSQLite(sqlite_file_name string) *sql.DB {
 
-// TODO: rething below as now col names are quoted, so maybe just quotes are to be removed (or masked)
+// TODO: rethink below as now col names are quoted, so maybe just quotes are to be removed (or masked)
 var colNameSymbolsToBeReplaced = map[string]string{
 	"\n":     "",
 	"/":      "",
@@ -78,11 +82,12 @@ func (self Database) createTable(sheetName string,
 	//TODO: check the list of tables instead of db calls to check if database exists
 	tableName := sheetName
 	i := 0
-	tx, err := self.db_connection.Begin()
-	defer tx.Commit()
+	// tx, err := self.db_connection.Begin()
+	// defer tx.Commit()
 	for {
 		sqlStmt, colNamesSQLArr := prepareTableCreateStatement(tableName, colNamesArr, colNamesTypes)
-		_, err = self.db_connection.Exec(sqlStmt)
+		// _, err = self.db_connection.Exec(sqlStmt)
+		self.execSQLInternal(sqlStmt)
 		if err != nil { //Table exists most of the times. Should create new one
 			if err.Error() != fmt.Sprintf("table %s already exists", tableName) {
 				log.Fatalf("createTable: Unknown table create error:: %v\n", err)

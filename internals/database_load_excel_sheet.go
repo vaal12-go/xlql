@@ -23,6 +23,16 @@ func (self Database) Load_excel_sheet(thread *starlark.Thread,
 		ErrorLogger.Printf("Error getting parameters for load_excel_sheet: %v\n", err)
 		return starlark.None, err
 	}
+
+	// TODO: document this parameter
+	if params.drop_table {
+		err = self.dropTableIfExists(params.sheet_name)
+		if err != nil {
+			fmt.Printf("Load_excel_shee. err: %v\n", err)
+			return nil, err
+		}
+	}
+
 	params.excelizeFile, err = excelize.OpenFile(params.excel_file_name)
 	if err != nil {
 		ErrorLogger.Printf("Error opening excel file load_excel_sheet: %v\n", err)
@@ -44,10 +54,12 @@ func (self Database) Load_excel_sheet(thread *starlark.Thread,
 	//     those are autorenamed
 	//TODO: remove leading and trailing spaces from col names and print a message about it
 	tx, err := self.db_connection.Begin()
+	// fmt.Printf("\"load excel transaction begun\": %v\n", "load excel transaction begun")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer func() { //TODO: maybe combine with close excel defer function
+		// fmt.Printf("\"load_excel committed\": %v\n", "load_excel committed")
 		err = tx.Commit()
 		if err != nil {
 			log.Fatal(err)
@@ -74,9 +86,13 @@ func (self Database) Load_excel_sheet(thread *starlark.Thread,
 	}
 	valStartX, colNamesStartY, _ := getColumnNamesCoords(params)
 	valStartY := colNamesStartY + 1
-	ret := NewQuery(&self,
+	ret, err := NewQuery(&self,
 		fmt.Sprintf("SELECT * FROM %s", sqlTblName),
 		sqlTblName)
+
+	if err != nil {
+		return starlark.None, err
+	}
 	temp_cursor, err := NewCursorInternal(self.db_connection, ret.query_sql)
 	sqlColTypes := temp_cursor.GetColumnTypes()
 	temp_cursor.Close()

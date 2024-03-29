@@ -18,7 +18,7 @@ var (
 )
 
 func TestStripDoubleQuotes(t *testing.T) {
-	t.Log("TestStripDoubleQuotes starts")
+	// t.Log("TestStripDoubleQuotes starts")
 	for key, expectedResult := range stripDoubleQuotesTestCases {
 		if internals.StripDoubleQuotes(key) != expectedResult {
 			resReceived := internals.StripDoubleQuotes(key)
@@ -27,6 +27,5 @@ func TestStripDoubleQuotes(t *testing.T) {
 				key, expectedResult, resReceived)
 		}
 	}
-
 	// t.Error("I am a error")
 }

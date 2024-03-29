@@ -27,7 +27,10 @@ WHERE
 '''
 )
 
-combined_query.save_to_excel("employee_dpt.xlsx", "employee_departments")
+combined_query.save_to_excel(
+    "employee_dpt_%s.xlsx" % get_datetime_formatted(), 
+    "employee_departments"
+)
 
 
 

@@ -3,43 +3,46 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"test.com/excel-ark/internals"
 )
 
 const (
-	VER_STRING = "excel_scripter version"
+	VER_STRING = "xlql (Excel query language)"
 )
 
 var (
-	fName        string
-	printVersion bool
-	printHelp    bool
-
-	version      string
-	build_date   string
-	commit       string
-	ver_codename string
-	ver_hash     string
+	fName             string
+	printVersion      bool
+	printHelp         bool
+	version           string
+	build_date        string
+	commit            string
+	ver_codename      string
+	ver_hash          string
+	sqlite_extensions string
 )
 
 func main() {
 	flag.StringVar(&fName, "f", "", "Starlark file to execute.")
 	flag.BoolVar(&printHelp, "h", false, "Print help message")
 	flag.BoolVar(&printVersion, "v", false, "Print version message")
+	flag.StringVar(&sqlite_extensions, "e", "",
+		"list of sqlite extensions (separated by question mark to load. No wildcards in file names yet.")
+	//TODO: explore if possible to add wildcards for extension names
 	flag.Parse()
 	if printHelp {
 		flag.PrintDefaults()
 		return
 	}
 	if printVersion {
-		ver_str := fmt.Sprintf("%s \"%s\" %s \n",
+		ver_str := fmt.Sprintf("%s \n\tversion:%s %s \n",
 			VER_STRING, version, build_date)
 		if ver_codename != "" {
-			ver_str = ver_str + "name:" + ver_codename
+			ver_str = ver_str + "\tcodename:" + ver_codename
 		}
 		if ver_hash != "" {
 			ver_str = fmt.Sprintf("%s [git hash:%s]", ver_str, ver_hash)
@@ -55,7 +58,7 @@ func main() {
 		if DEVELOPER_MODE == "" {
 			dbgMode = false
 		} else {
-			fmt.Printf("DEV mode")
+			fmt.Printf("DEV mode\n")
 			dbgMode = true
 		}
 	} else {
@@ -64,14 +67,24 @@ func main() {
 	}
 	if fName == "" {
 		if DEVELOPER_MODE == "" {
-			log.Fatal("No .star file specified with -f paramater. Exiting.")
+			// log.Fatal("No .star file specified with -f paramater. Exiting.")
+			flag.PrintDefaults()
+			return
 		} else {
 			fName = "test.star"
 		}
 	}
-	internals.Init(dbgMode) //Logging is also initiated here
+
+	var extSlice *[]string = nil
+	if sqlite_extensions != "" {
+		// fmt.Printf("sqlite_extensions: %v\n", sqlite_extensions)
+		extSlc := strings.Split(sqlite_extensions, "?")
+		extSlice = &extSlc
+	}
+
+	internals.Init(dbgMode, extSlice) //Logging is also initiated here
 	//See internals/utils.go for available loggin methods
-	internals.InfoLogger.Println("\n\n\n\n\n ******************************************* ")
+	// internals.InfoLogger.Println("\n\n\n\n\n ******************************************* ")
 	internals.ExecStarlarkFile(fName)
 	internals.Close()
 } //func main() {

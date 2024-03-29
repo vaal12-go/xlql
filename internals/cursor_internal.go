@@ -1,6 +1,9 @@
 package internals
 
-import "database/sql"
+import (
+	"context"
+	"database/sql"
+)
 
 type cursor_internal struct {
 	dbConnection *sql.DB
@@ -10,18 +13,24 @@ type cursor_internal struct {
 	colTypes     ([](*sql.ColumnType))
 }
 
-//[x]: clean file
-//[x]: add this to internals\cursor.go and internals\database_get_tables.go
+// [x]: clean file
+// [x]: add this to internals\cursor.go and internals\database_get_tables.go
 func NewCursorInternal(conn *sql.DB, query string) (*cursor_internal, error) {
 	ret := cursor_internal{
 		dbConnection: conn,
 		query_string: query,
 	}
 	var err error
+	tx, err := ret.dbConnection.BeginTx(context.TODO(), &sql.TxOptions{
+		Isolation: sql.LevelReadUncommitted,
+		ReadOnly:  true,
+	})
 	ret.rows, err = ret.dbConnection.Query(ret.query_string)
 	if err != nil {
 		return nil, err
 	}
+	tx.Commit()
+
 	ret.colNames, err = ret.rows.Columns()
 	if err != nil {
 		return nil, err

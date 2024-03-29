@@ -21,6 +21,7 @@ type loadExceSheetParams struct {
 	db_col_names           map[string]string
 	append_rows            bool
 	db_table_name          string
+	drop_table             bool
 	excelizeFile           *excelize.File
 	table_range_start      string
 	table_range_start_x    int64
@@ -43,6 +44,7 @@ func (self loadExceSheetParams) String() string {
 		db_col_names : %v
 		append_rows: %v
 		db_table_name : %s
+		drop_table: %v
 		table_range_start: %s
 		table_range_start_x %d
 		table_range_start_y %d
@@ -59,6 +61,7 @@ func (self loadExceSheetParams) String() string {
 		self.db_col_names,
 		self.append_rows,
 		self.db_table_name,
+		self.drop_table,
 		self.table_range_start,
 		self.table_range_start_x,
 		self.table_range_start_y,
@@ -79,6 +82,7 @@ func getParameters(args starlark.Tuple,
 		db_col_names:           make(map[string]string, 0),
 		append_rows:            false,
 		db_table_name:          "",
+		drop_table:             false,
 		table_range_start:      "",
 		table_range_end:        "",
 		auto_rename_table_name: false,
@@ -99,6 +103,8 @@ func getParameters(args starlark.Tuple,
 		argName := StripDoubleQuotes(arg[0].String())
 		// DLf("Stripped argName:%s", argName)
 		switch argName {
+		case "drop_table":
+			params.drop_table = bool(arg[1].(starlark.Bool).Truth())
 		case "auto_rename_table_name":
 			params.auto_rename_table_name = bool(arg[1].(starlark.Bool).Truth())
 		case "sheet_name":
@@ -156,7 +162,7 @@ func getParameters(args starlark.Tuple,
 	if params.sheet_name == "" {
 		log.Fatal("load_excel_sheet: required parameter 'sheet_name' (Excel worksheet name) is not provided.")
 	}
-	// DLf("Load_excel_sheet Params: %v\n", params)
+	// fmt.Printf("Load_excel_sheet Params: %v\n", params)
 	// DLf("*********** ------------ ***************\n\n")
 	return &params, nil
 } //func getParameters(args starlark.Tuple,

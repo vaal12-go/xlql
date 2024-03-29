@@ -1,5 +1,5 @@
-SET VER_NUMBER=0.1.0
-SET VERSION_CODE_NAME="INITIAL_RELEASE"
+SET VER_NUMBER=0.2.0
+SET VERSION_CODE_NAME="MAR24_RELEASE"
 
 git show -s --format=%%h > build\temp.txt
 set /p LAST_COMMIT_HASH=<build\temp.txt

@@ -40,6 +40,7 @@ func (self Query) Print(thread *starlark.Thread,
 		} //for idx := range valSlice {
 		t.AppendRow(toAnyList(strSlice))
 	}
+	curs.Close()
 	t.AppendSeparator()
 	t.SetStyle(table.StyleColoredBlackOnRedWhite)
 	t.SetAllowedRowLength(220)

@@ -22,12 +22,12 @@ func prepareDB() {
 
 var (
 	query_test_cases = map[string]string{
-		"load_excel_sheet_table_range": "d3847b68cf21864dd885f26436dd1037cee6b5084139f5ce9c8a31a44d7aea29",
+		"load_excel_sheet_table_range": "1a2e4d3fbca1fae29bc317b950188e1a9077a8eb48bc63beb32b306278c730ce",
 	}
 )
 
 func TestQuery(t *testing.T) {
-	internals.Init(true)
+	internals.Init(true, nil)
 	globals := internals.ExecStarlarkFile("./test_cases/query_test.star")
 	// fmt.Printf("globals: %v\n", globals)
 

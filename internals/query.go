@@ -2,6 +2,7 @@ package internals
 
 import (
 	"crypto/sha256"
+	"database/sql"
 	"fmt"
 	"log"
 	"strings"
@@ -14,6 +15,7 @@ var QUERY_TYPE_METHODS = []string{"Get_column_names", "Print", "Get_cursor",
 
 type Query struct {
 	connected_db             *Database
+	query_conn               *sql.Conn
 	query_sql                string
 	table_name               string //For cases when query is created from load_excel_sheet
 	get_column_names_builtin *starlark.Builtin
@@ -78,17 +80,23 @@ func (self Query) Table_name(thread *starlark.Thread,
 	return starlark.String(self.table_name), nil
 } //func (self Query) Table_name(thread *starlark.Thread,
 
-func NewQuery(db *Database, sql string,
-	table_name string) *Query {
+func NewQuery(db *Database, sql string, table_name string) (*Query, error) {
+	// fmt.Printf("\"Before getting connection\": %v\n", "Before getting connection")
+	// conn, err := db.db_connection.Conn(context.TODO())
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// fmt.Printf("\"HAve new connection\": %v\n", "HAve new connection")
 	ret := Query{
 		query_sql:    sql,
 		connected_db: db,
-		table_name:   table_name,
+		// query_conn:   conn,
+		table_name: table_name,
 	}
 	//below var is necessary to get proper pointer to ret
 	var iFacePointer interface{} = ret
 	ret.exporter.RegisterBuiltIns(&iFacePointer, QUERY_TYPE_METHODS)
-	return &ret
+	return &ret, nil
 } //func NewQuery(db *Database, sql string,
 
 func (self Query) Attr(name string) (starlark.Value, error) {

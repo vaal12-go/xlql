@@ -71,18 +71,20 @@ func (self Query) Add_row(thread *starlark.Thread,
 	}
 
 	insertSQL := prepareInsertStatementFromArray2(self.table_name, colNamesArr)
-	// fmt.Printf("insertSQL: %v\n", insertSQL)
 	anyValArr := toAnyList(valArr)
-	// fmt.Printf("\"8\": %v\n", "8")
+
+	// fmt.Printf("self.connected_db.db_connection.Stats(): %#v\n", self.connected_db.db_connection.Stats())
+
+	var err error
 	// tx, err := self.connected_db.db_connection.Begin()
-	// fmt.Printf("\"9\": %v\n", "9")
-	_, err := self.connected_db.db_connection.Exec(insertSQL, anyValArr...)
-	// fmt.Printf("\"10\": %v\n", "10")
-	// tx.Commit()
-	// fmt.Printf("\"11\": %v\n", "11")
+	// if err != nil {
+	// 	return starlark.None, err
+	// }
+	_, err = self.connected_db.db_connection.Exec(insertSQL, anyValArr...)
 	if err != nil {
 		return starlark.None,
 			fmt.Errorf("query.add_row Error executing INSERT statement:%s", err)
 	}
+	// tx.Commit()
 	return starlark.None, nil
 } //func (self Query) add_row(thread *starlark.Thread,

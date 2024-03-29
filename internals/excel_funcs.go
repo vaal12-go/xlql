@@ -92,6 +92,8 @@ func getColumnNamesAndTypes(params *loadExceSheetParams) (colNames []string,
 					if err != nil {
 						log.Fatal("getColumnNamesAndTypes cannot convert cell coordinates:" + err.Error())
 					}
+					// fmt.Printf("cellCoord: '%v'\n", cellCoord)
+					// fmt.Printf("params.sheet_name: '%v'\n", params.sheet_name)
 					colCell, err := params.excelizeFile.GetCellValue(
 						params.sheet_name,
 						cellCoord)

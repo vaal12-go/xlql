@@ -1,8 +1,11 @@
 package internals
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	"github.com/xuri/excelize/v2"
 	"go.starlark.net/starlark"
@@ -26,7 +29,27 @@ func (self Query) Save_to_excel(thread *starlark.Thread,
 	}
 	// DLf("save_to_excel.fName: %v\n", fName)
 	// DLf("save_to_excel.sheetName: %v\n", sheetName)
-	excelizeFile := excelize.NewFile()
+
+	_, err := os.Stat(fName)
+	var excelizeFile *excelize.File
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			//New file
+			excelizeFile = excelize.NewFile()
+		} else {
+			//Some other error - will panic
+			fmt.Printf("Some error checking file [%s]exists:%v\n",
+				fName, err)
+			return starlark.None, err
+		}
+
+	} else {
+		//File exists - should open it
+		excelizeFile, err = excelize.OpenFile(fName)
+		if err != nil {
+			return starlark.None, err
+		}
+	}
 	defer func() {
 		if err := excelizeFile.Close(); err != nil {
 			log.Fatal(err)
@@ -88,19 +111,32 @@ func (self Query) Save_to_excel(thread *starlark.Thread,
 	// DLf("\"Table range:\": %v\n", tblRange)
 	disable := false
 	//LOW: Add parameter to call xl_table_style with styles from https://xuri.me/excelize/en/utils.html#AddTable
-	err = excelizeFile.AddTable(sheetName,
-		&excelize.Table{
-			Range:             tblRange,
-			Name:              "table_" + sheetName,
-			StyleName:         "TableStyleMedium2",
-			ShowFirstColumn:   true,
-			ShowLastColumn:    true,
-			ShowRowStripes:    &disable,
-			ShowColumnStripes: true,
-		})
-	if err != nil {
-		return starlark.None, fmt.Errorf("Error setting table in Excel:%v", err)
+	tbl_name := "table_" + sheetName
+	for {
+
+		err = excelizeFile.AddTable(sheetName,
+			&excelize.Table{
+				Range: tblRange,
+				Name:  tbl_name,
+				// StyleName:         "TableStyleMedium2",
+				StyleName:         "TableStyleMedium6",
+				ShowFirstColumn:   true,
+				ShowLastColumn:    true,
+				ShowRowStripes:    &disable,
+				ShowColumnStripes: true,
+			})
+		if err != nil {
+			if strings.Contains(err.Error(), "the same name table already exists") {
+				tbl_name = tbl_name + "0"
+				fmt.Printf("tbl_name: %v\n", tbl_name)
+			} else {
+				return starlark.None, fmt.Errorf("Error setting table in Excel:%v", err)
+			}
+		} else {
+			break
+		}
 	}
+
 	excelizeFile.SetActiveSheet(sheetIdx)
 	//LOW: add parameter (for user to use) remove_initial_worksheet to remove "Sheet1" from the created file
 	if err := excelizeFile.SaveAs(fName); err != nil {

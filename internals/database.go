@@ -3,6 +3,7 @@ package internals
 import (
 	"database/sql"
 	"fmt"
+	"slices"
 
 	_ "github.com/mattn/go-sqlite3"
 	"go.starlark.net/starlark"
@@ -49,6 +50,39 @@ func NewDatabase(file_name string) *Database {
 	return &ret
 } //func NewDatabase(file_name string) *Database {
 
+func (self Database) dropTableIfExists(tblName string) error {
+	tbls := self.get_tables_actual()
+	// fmt.Printf("dropTableIfExists tbls: %v\n", tbls)
+	var err error = nil
+	if slices.Contains(tbls, tblName) {
+		// fmt.Printf("\"dropping table\": %v\n", "dropping table")
+		err = self.execSQLInternal(
+			`DROP TABLE ` + tblName)
+	}
+	return err
+}
+
+// TODO: add execSQL function for starlark
+func (self Database) execSQLInternal(sql_str string) error {
+	// tx, err := self.db_connection.BeginTx(context.TODO(),
+	// 	&sql.TxOptions{
+	// 		Isolation: sql.LevelReadUncommitted,
+	// 		ReadOnly:  false,
+	// 	})
+	// fmt.Printf("Execuding SQL: sql_str: %v\n", sql_str)
+	_, err := self.db_connection.Exec(sql_str)
+
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return err
+	}
+
+	// fmt.Printf("result: %v\n", result)
+
+	// tx.Commit()
+	return err
+} //func (self Database) execSQLInternal(sql_str string) {
+
 func (self Database) Run_query(thread *starlark.Thread,
 	b *starlark.Builtin,
 	args starlark.Tuple,
@@ -62,27 +96,26 @@ func (self Database) Run_query(thread *starlark.Thread,
 		return nil, err
 	}
 	// fmt.Printf("Executing SQL:%s\n", query_SQL)
-	// _, err := self.db_connection.Query(query_SQL)
-	// res, err := self.db_connection.Exec("BEGIN IMMEDIATE TRANSACTION")
-	// fmt.Printf("\"2\": %v\n", "2")
+
 	//TODO: check need to add and commit transaction for each statement like below
 	// tx, err := self.db_connection.Begin()
 	// tx.Commit()
-
-	// fmt.Printf("\"3\": %v\n", "3")
-	_, err := self.db_connection.Exec(query_SQL)
-	// fmt.Printf("\"4\": %v\n", "4")
-	// fmt.Printf("\"5\": %v\n", "5")
-	// res, err = self.db_connection.Exec("COMMIT TRANSACTION")
-	// fmt.Printf(" self.db_connection.Exec res: %v\n", res)
+	err := self.execSQLInternal(query_SQL)
 	if err != nil {
-		DLf("Database.Run_query. Error running query:%v\n", err)
 		return nil, err
 	}
+	// _, err := self.db_connection.Exec(query_SQL)
+
+	// res, err = self.db_connection.Exec("COMMIT TRANSACTION")
+
+	// if err != nil {
+	// 	DLf("Database.Run_query. Error running query:%v\n", err)
+	// 	return nil, err
+	// }
 	// fmt.Printf("\"6\": %v\n", "6")
-	ret := NewQuery(&self, query_SQL, "")
+	ret, err := NewQuery(&self, query_SQL, "")
 	// fmt.Printf("\"7\": %v\n", "7")
-	return ret, nil
+	return ret, err
 } //func (self Database) run_query(thread *starlark.Thread,
 
 func (self Database) Attr(name string) (starlark.Value, error) {

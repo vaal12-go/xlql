@@ -31,6 +31,7 @@ var TestGetParametersMap = map[string]string{
 		db_col_names : map[]
 		append_rows: false
 		db_table_name : 
+		drop_table: false
 		table_range_start: 
 		table_range_start_x 0
 		table_range_start_y 0
@@ -47,6 +48,7 @@ var TestGetParametersMap = map[string]string{
 		db_col_names : map[]
 		append_rows: false
 		db_table_name : 
+		drop_table: false
 		table_range_start: 
 		table_range_start_x 0
 		table_range_start_y 0
@@ -58,7 +60,7 @@ var TestGetParametersMap = map[string]string{
 }
 
 func TestGetParameters(t *testing.T) {
-	Init(true)
+	Init(true, nil)
 	PredeclaredDict["TEST_getParametersLoad_excel_sheet"] =
 		starlark.NewBuiltin("TEST_getParametersLoad_excel_sheet",
 			MOCK_getParametersLoad_excel_sheet)

@@ -6,9 +6,6 @@ import (
 	starlark "go.starlark.net/starlark"
 )
 
-//[x] File is cleaned
-//[x]: review/update logging with logging levels
-
 // HIGH: limit debug messages in production using logging priorities
 //
 //	https://www.honeybadger.io/blog/golang-logging/
@@ -23,14 +20,21 @@ func (self Database) Create_table(thread *starlark.Thread,
 	var tblName string
 	var val starlark.Value
 	var auto_rename_table_name = false
+	var drop_table = false
 	if err := starlark.UnpackArgs(
 		b.Name(), args, kwargs,
 		"name", &tblName,
 		"columns", &val,
-		"auto_rename_table_name?", &auto_rename_table_name); err != nil {
+		"auto_rename_table_name?", &auto_rename_table_name,
+		"drop_table?", &drop_table); err != nil {
 		return nil, err
 	}
-	DLf("create_table: tblName: %v\n", tblName)
+	// DLf("create_table: tblName: %v\n", tblName)
+
+	if drop_table {
+		self.dropTableIfExists(tblName)
+	}
+
 	dct := val.(*starlark.Dict)
 	colMap := StarlarkDictToMap(dct)
 	colNames := make([]string, 0)
@@ -49,17 +53,18 @@ func (self Database) Create_table(thread *starlark.Thread,
 	for _, colName := range dct.Keys() {
 		colNames = append(colNames, RemoveQuotesFromString(colName.String()))
 	}
-	DLf("colNames: %v\n", colNames)
-	DLf("colMap: %v\n", colMap)
+	// DLf("colNames: %v\n", colNames)
+	// DLf("colMap: %v\n", colMap)
 	tblNameActual, colNamesArray, err := self.createTable(
 		tblName, &colNames, &colMap, auto_rename_table_name)
+	colNamesArray = append(colNamesArray, "qwe1") //colNamesArray is not needed - remove if not needed
 	if err != nil {
 		return starlark.None, err
 	}
-	DLf("tblNameActual: %v\n", tblNameActual)
-	DLf("colNamesArray: %v\n", colNamesArray)
-	ret := NewQuery(&self,
+	// DLf("tblNameActual: %v\n", tblNameActual)
+	// DLf("colNamesArray: %v\n", colNamesArray)
+	ret, err := NewQuery(&self,
 		fmt.Sprintf("SELECT * FROM %s", tblNameActual),
 		tblNameActual)
-	return ret, nil
+	return ret, err
 } //func (self Database) create_table(thread *starlark.Thread,
