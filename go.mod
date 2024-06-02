@@ -33,6 +33,7 @@ require (
 	golang.org/x/telemetry v0.0.0-20231114163143-69313e640400 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.15.0 // indirect
+	golang.org/x/tools/cmd/cover v0.1.0-deprecated // indirect
 	golang.org/x/tools/gopls v0.14.2 // indirect
 	golang.org/x/vuln v1.0.1 // indirect
 	honnef.co/go/tools v0.4.5 // indirect
