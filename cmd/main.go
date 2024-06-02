@@ -24,6 +24,8 @@ var (
 	ver_codename      string
 	ver_hash          string
 	sqlite_extensions string
+	ver_sqlite        string
+	build_time        string
 )
 
 func main() {
@@ -39,8 +41,8 @@ func main() {
 		return
 	}
 	if printVersion {
-		ver_str := fmt.Sprintf("%s \n\tversion:%s %s \n",
-			VER_STRING, version, build_date)
+		ver_str := fmt.Sprintf("%s \n\tversion:%s (build time:%s UTC+3) %s \n\tsqlite version:%s\n",
+			VER_STRING, version, build_time, build_date, ver_sqlite)
 		if ver_codename != "" {
 			ver_str = ver_str + "\tcodename:" + ver_codename
 		}
@@ -74,6 +76,24 @@ func main() {
 			fName = "test.star"
 		}
 	}
+
+	// excelizeFile, err := excelize.OpenFile("GoodBlueTableStyle_29Apr2024.xlsx")
+	// if err != nil {
+	// 	fmt.Printf("err: %v\n", err)
+	// 	panic(1)
+	// }
+
+	// tbls, err := excelizeFile.GetTables("Sheet1")
+	// if err != nil {
+	// 	fmt.Printf("Getting tables err: %v\n", err)
+	// 	panic(1)
+	// }
+
+	// for _, tbl := range tbls {
+	// 	fmt.Printf("tbl: %v\n", tbl)
+	// }
+
+	// panic(1)
 
 	var extSlice *[]string = nil
 	if sqlite_extensions != "" {

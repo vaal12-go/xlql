@@ -20,10 +20,12 @@ func (self Query) Save_to_excel(thread *starlark.Thread,
 	args starlark.Tuple,
 	kwargs []starlark.Tuple) (starlark.Value, error) {
 	// HIGH: make metadata column in the table (or a comment to the first cell)
-	fName, sheetName := "", "Sheet1"
+	fName, sheetName, tableStyle := "", "Sheet1", ""
 	if err := starlark.UnpackArgs(
 		b.Name(), args, kwargs,
-		"file_name", &fName, "sheet_name", &sheetName); err != nil {
+		"file_name", &fName,
+		"sheet_name?", &sheetName,
+		"table_style?", &tableStyle); err != nil {
 		fmt.Printf("\"FIle name issue:\": %v\n %s\n", "FIle name issue:", err)
 		return nil, err
 	}
@@ -110,20 +112,23 @@ func (self Query) Save_to_excel(thread *starlark.Thread,
 	tblRange := fmt.Sprintf("%s:%s", firstCellAddr, lastCellAddr)
 	// DLf("\"Table range:\": %v\n", tblRange)
 	disable := false
+	enable := true
 	//LOW: Add parameter to call xl_table_style with styles from https://xuri.me/excelize/en/utils.html#AddTable
 	tbl_name := "table_" + sheetName
 	for {
+		//TODO: add ShowRowStripes, ShowColumnStripes, ShowFirst Column and Show Last column as parameters
 
+		//TODO: see how cell level formatting can be applied: https://xuri.me/excelize/en/cell.html#SetCellStyle   See Example #5
 		err = excelizeFile.AddTable(sheetName,
 			&excelize.Table{
 				Range: tblRange,
 				Name:  tbl_name,
-				// StyleName:         "TableStyleMedium2",
-				StyleName:         "TableStyleMedium6",
+				// StyleName: "TableStyleMedium2",
+				StyleName:         tableStyle,
 				ShowFirstColumn:   true,
 				ShowLastColumn:    true,
-				ShowRowStripes:    &disable,
-				ShowColumnStripes: true,
+				ShowRowStripes:    &enable,
+				ShowColumnStripes: disable,
 			})
 		if err != nil {
 			if strings.Contains(err.Error(), "the same name table already exists") {

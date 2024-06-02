@@ -13,8 +13,6 @@ type cursor_internal struct {
 	colTypes     ([](*sql.ColumnType))
 }
 
-// [x]: clean file
-// [x]: add this to internals\cursor.go and internals\database_get_tables.go
 func NewCursorInternal(conn *sql.DB, query string) (*cursor_internal, error) {
 	ret := cursor_internal{
 		dbConnection: conn,

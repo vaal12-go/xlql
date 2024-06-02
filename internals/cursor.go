@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"reflect"
+	"time"
 
 	"go.starlark.net/starlark"
 )
@@ -61,6 +63,7 @@ func (self Cursor) Next(p *starlark.Value) bool {
 				retArr = append(retArr, starlark.None)
 				continue
 			}
+			t1 := reflect.TypeOf(val)
 			switch t := val.(type) {
 			case string:
 				retArr = append(retArr,
@@ -71,7 +74,12 @@ func (self Cursor) Next(p *starlark.Value) bool {
 			case int64:
 				retArr = append(retArr,
 					starlark.MakeInt64(val.(int64)))
+			case time.Time:
+				retArr = append(retArr,
+					starlark.String((val.(time.Time).String())))
+
 			default:
+				fmt.Printf("unknown type:%s     %v\n", t1, val)
 				log.Fatalf("cursor.Next(). Handling of this type is not implemented:%v", t)
 			}
 		} ////for _, val := range *valSlice {

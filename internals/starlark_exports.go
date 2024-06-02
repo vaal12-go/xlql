@@ -5,6 +5,7 @@ package internals
 import (
 	"log"
 
+	// "github.com/gofiber/fiber/v2/log"
 	"go.starlark.net/starlark"
 	syntax "go.starlark.net/syntax"
 )
@@ -26,7 +27,14 @@ func ExecStarlarkFile(fName string) *starlark.StringDict {
 	globals, err := starlark.ExecFileOptions(
 		&execOptions, thread, fName, nil, PredeclaredDict)
 	if err != nil {
-		log.Fatalf("ExecStarlarkFile. Error:%v\n", err.Error())
+		msg2Print := ""
+		switch err.(type) {
+		case syntax.Error:
+			msg2Print = err.(syntax.Error).Error()
+		case *starlark.EvalError:
+			msg2Print = (err.(*starlark.EvalError)).Backtrace()
+		}
+		log.Fatalf("\n!!!!!!\n%v\n", msg2Print)
 	}
 	DLf("Script finished. Globals returned:", globals)
 	return &globals

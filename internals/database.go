@@ -9,7 +9,9 @@ import (
 	"go.starlark.net/starlark"
 )
 
-// HIGH: review/update logging with logging levels
+//TODO: clean file
+
+// TODO: review/update logging with logging levels
 // LOW: to consider if this id_counter is needed at all
 var id_counter = 0
 
@@ -28,8 +30,12 @@ type Database struct {
 	StarlarkValueImplementationStub
 }
 
+// TODO: add new_inmem_db function to create temp DB quickly and this will replace default DB
+// TODO: add copying of inmem db to disk:
+// https://pkg.go.dev/github.com/mattn/go-sqlite3#SQLiteConn.Backup
 var database_export_fields_array = []string{
 	"Run_query", "Load_excel_sheet", "Get_tables", "Create_table",
+	"Exec_sql",
 }
 
 // TODO: check if buiiltins can be implemented with a map - e.g. map of starlark name as key and builtin itself as value
@@ -45,8 +51,10 @@ func NewDatabase(file_name string) *Database {
 	}
 	//below var is necessary to get proper pointer to ret
 	var iFacePointer interface{} = ret
+	// ret.exporter.RegisterBuiltIns(&iFacePointer,
+	// 	[]string{"Run_query", "Load_excel_sheet", "Get_tables", "Create_table"})
 	ret.exporter.RegisterBuiltIns(&iFacePointer,
-		[]string{"Run_query", "Load_excel_sheet", "Get_tables", "Create_table"})
+		database_export_fields_array)
 	return &ret
 } //func NewDatabase(file_name string) *Database {
 
@@ -64,24 +72,38 @@ func (self Database) dropTableIfExists(tblName string) error {
 
 // TODO: add execSQL function for starlark
 func (self Database) execSQLInternal(sql_str string) error {
-	// tx, err := self.db_connection.BeginTx(context.TODO(),
-	// 	&sql.TxOptions{
-	// 		Isolation: sql.LevelReadUncommitted,
-	// 		ReadOnly:  false,
-	// 	})
-	// fmt.Printf("Execuding SQL: sql_str: %v\n", sql_str)
 	_, err := self.db_connection.Exec(sql_str)
-
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
+		fmt.Printf("execSQLInternal. Error executing query:%s \n\terr: %v\n", sql_str, err)
 		return err
 	}
-
-	// fmt.Printf("result: %v\n", result)
-
-	// tx.Commit()
 	return err
 } //func (self Database) execSQLInternal(sql_str string) {
+
+func (self Database) Exec_sql(thread *starlark.Thread,
+	b *starlark.Builtin,
+	args starlark.Tuple,
+	kwargs []starlark.Tuple) (starlark.Value, error) {
+
+	sql_str := ""
+	if err := starlark.UnpackArgs(
+		b.Name(), args, kwargs,
+		"sql?", &sql_str); err != nil {
+		return nil, err
+	}
+
+	if sql_str == "" {
+		// fmt.Printf("Fatal: sql parameter of exec_sql cannot be empty.\n")
+		return starlark.None, fmt.Errorf("sql parameter of exec_sql cannot be empty.")
+	}
+
+	// fmt.Printf("\"Exec SQL is running\": %v\n", "Exec SQL is running")
+	// fmt.Printf("sql_str: %v\n", sql_str)
+
+	err := self.execSQLInternal(sql_str)
+
+	return starlark.None, err
+} //func (self Database) Exec_sql(thread *starlark.Thread,
 
 func (self Database) Run_query(thread *starlark.Thread,
 	b *starlark.Builtin,

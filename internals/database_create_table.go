@@ -37,6 +37,7 @@ func (self Database) Create_table(thread *starlark.Thread,
 
 	dct := val.(*starlark.Dict)
 	colMap := StarlarkDictToMap(dct)
+	// fmt.Printf("colMap: %v\n", colMap)
 	colNames := make([]string, 0)
 
 	//FIXME: this relies on dct.Keys returns same sequence of columns as declared in starlark
@@ -50,21 +51,31 @@ func (self Database) Create_table(thread *starlark.Thread,
 	// })
 	//This can not be reliable. Should revise columns signature of the create_table function
 
+	columnsArr := make([]*XLsqlColumn, 0)
+
 	for _, colName := range dct.Keys() {
+		realColName := RemoveQuotesFromString(colName.String())
+		col := XLsqlColumn{
+			xlColName:  realColName,
+			sqlColType: colMap[realColName],
+		}
+		columnsArr = append(columnsArr, &col)
 		colNames = append(colNames, RemoveQuotesFromString(colName.String()))
 	}
-	// DLf("colNames: %v\n", colNames)
-	// DLf("colMap: %v\n", colMap)
-	tblNameActual, colNamesArray, err := self.createTable(
-		tblName, &colNames, &colMap, auto_rename_table_name)
-	colNamesArray = append(colNamesArray, "qwe1") //colNamesArray is not needed - remove if not needed
+
+	// fmt.Printf("columnsArr: %#v\n", columnsArr)
+	// printColArr(&columnsArr)
+
+	tblNameActual, err := self.createTable(
+		tblName, &columnsArr, auto_rename_table_name)
+	// colNamesArray = append(colNamesArray, "qwe1") //colNamesArray is not needed - remove if not needed
 	if err != nil {
 		return starlark.None, err
 	}
-	// DLf("tblNameActual: %v\n", tblNameActual)
-	// DLf("colNamesArray: %v\n", colNamesArray)
 	ret, err := NewQuery(&self,
 		fmt.Sprintf("SELECT * FROM %s", tblNameActual),
 		tblNameActual)
 	return ret, err
+
+	// return starlark.None, nil //THIS IS DEBUG
 } //func (self Database) create_table(thread *starlark.Thread,

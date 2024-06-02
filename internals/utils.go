@@ -4,6 +4,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"go.starlark.net/starlark"
 )
@@ -31,6 +32,8 @@ func reduce[T, M any](s []T, f func(M, T) M, initValue M) M {
 //TODO: copy DebugLogger (DL) to stdout during development
 
 func getStringValueFromInterface(val any) string {
+	// fmt.Printf("getStringValueFromInterface. val: %v\n", val)
+	// fmt.Printf("reflect.TypeOf(val): %v\n", reflect.TypeOf(val))
 	switch val.(type) {
 	case string:
 		return val.(string)
@@ -42,6 +45,8 @@ func getStringValueFromInterface(val any) string {
 		return ""
 	case float64:
 		return strconv.FormatFloat(val.(float64), 'f', -1, 64)
+	case time.Time:
+		return val.(time.Time).Format("02-Jan-2006")
 	default:
 		log.Fatalf("getStringValueFromInterface - unknown type: %v/n %t/n",
 			val, val)
@@ -78,10 +83,20 @@ func toAnyList[T any](input []T) []any {
 }
 
 func StarlarkDictToMap(dct *starlark.Dict) map[string]string {
+	//TODO: check where this one is used and remove conversion to string of the map values
 	retMap := make(map[string]string, 0)
 	for _, key := range dct.Keys() {
 		val, _, _ := dct.Get(key)
 		retMap[RemoveQuotesFromString(key.String())] = RemoveQuotesFromString(val.String())
+	}
+	return retMap
+}
+
+func StarlarkDictToMap2(dct *starlark.Dict) map[string]any {
+	retMap := make(map[string]any, 0)
+	for _, key := range dct.Keys() {
+		val, _, _ := dct.Get(key)
+		retMap[RemoveQuotesFromString(key.String())] = val
 	}
 	return retMap
 }

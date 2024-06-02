@@ -55,75 +55,76 @@ func cleanSQLTableName(xl_table_name string) string {
 	return ret
 }
 
-func prepareTableCreateStatement(table_name string, colNamesArr *[]string,
-	colNamesTypes *map[string]string) (sqlStmt string, colNamesSQLArr []string) {
+func prepareTableCreateStatement(table_name string,
+	colArray *[]*XLsqlColumn) (sqlStmt string, err error) {
+
+	// colNamesArr *[]string,
+	// colNamesTypes *map[string]string
+
+	if len(*colArray) == 0 {
+		return "", fmt.Errorf("prepareTableCreateStatement. Empty colNamesArr is supplied.")
+	}
+
 	colNamesSQL := ""
-	colNamesSQLArr = make([]string, 0)
-	for _, colName := range *colNamesArr {
-		colType := (*colNamesTypes)[colName]
-		colNameClean := cleanSQLColName(colName)
+	// colNamesSQLArr = make([]string, 0)
+	for _, column := range *colArray {
+		// colType := (*colNamesTypes)[colName]
+		colType := column.sqlColType
+		// colNameClean := cleanSQLColName(column.xlColName)
+		column.sqlColName = cleanSQLColName(column.xlColName)
+
 		colNamesSQL = fmt.Sprintf(
-			"%s '%s' %s,", colNamesSQL, colNameClean, colType)
-		colNamesSQLArr = append(colNamesSQLArr, colNameClean)
+			"%s '%s' %s,", colNamesSQL, column.sqlColName, colType)
+		// colNamesSQLArr = append(colNamesSQLArr, column.sqlColName)
 	}
 	colNamesSQL = colNamesSQL[:len(colNamesSQL)-1] //To remove trailing comma
+
 	tableName := cleanSQLTableName(table_name)
 	sqlStmt = fmt.Sprintf(
 		`	create table %s (%s);
 			delete from "%s"; `,
 		tableName, colNamesSQL, tableName)
-	return sqlStmt, colNamesSQLArr
+
+	return sqlStmt, nil
 } //func prepareTableCreateStatement(table_name string, colNamesArr *[]string,
 
 func (self Database) createTable(sheetName string,
-	colNamesArr *[]string,
-	colNamesTypes *map[string]string,
-	auto_rename_table_name bool) (tblName string, colNamesSQLArr []string, err error) {
+	columnsArr *[]*XLsqlColumn,
+	auto_rename_table_name bool) (tblName string, err error) {
 	//TODO: check the list of tables instead of db calls to check if database exists
+
+	// colNamesArr *[]string,
+	// colNamesTypes *map[string]string,
+
 	tableName := sheetName
 	i := 0
 	// tx, err := self.db_connection.Begin()
 	// defer tx.Commit()
 	for {
-		sqlStmt, colNamesSQLArr := prepareTableCreateStatement(tableName, colNamesArr, colNamesTypes)
-		// _, err = self.db_connection.Exec(sqlStmt)
-		self.execSQLInternal(sqlStmt)
+		sqlStmt, err := prepareTableCreateStatement(tableName, columnsArr)
+		if err != nil {
+			return "", err
+		}
+
+		// fmt.Printf("sqlStmt: %v\n", sqlStmt)
+
+		err = self.execSQLInternal(sqlStmt)
 		if err != nil { //Table exists most of the times. Should create new one
 			if err.Error() != fmt.Sprintf("table %s already exists", tableName) {
-				log.Fatalf("createTable: Unknown table create error:: %v\n", err)
+				fmt.Printf("createTable: Unknown table create error:: %v\n", err)
+				return "", err
 			}
 			if !auto_rename_table_name {
-				return "", nil, fmt.Errorf("table %s already exists and auto_rename_table_name is false. Doing nothing. Table is not created.", tableName)
+				return "", fmt.Errorf("table %s already exists and auto_rename_table_name is false. Doing nothing. Table is not created.", tableName)
 			}
 			tableName = cleanSQLTableName(
 				fmt.Sprintf("%s_%d", sheetName, i))
 			i++
 		} else {
-			return tableName, colNamesSQLArr, nil
+			return tableName, nil
 		} //if err != nil {//Table exists most of the times. Should create new one
 	} //for {
 } //func createTable(sheetName string, colNames []string) {
-
-// [x]: replace this with some version of prepareInsertStatementFromArray
-// func prepareInsertStatementFromMap(
-// 	tbl_name string,
-// 	colNamesValuesMap map[string]string) (insert_sql string) {
-// 	colNamesSQL := ""
-// 	colValsSQL := ""
-// 	for key, val := range colNamesValuesMap {
-// 		if len(colNamesSQL) == 0 {
-// 			colNamesSQL = fmt.Sprintf("\"%s\"", RemoveQuotesFromString(key))
-// 			colValsSQL = fmt.Sprintf("\"%s\"", RemoveQuotesFromString(val))
-// 		} else {
-// 			colNamesSQL = fmt.Sprintf("%s, \"%s\"", colNamesSQL, RemoveQuotesFromString(key))
-// 			colValsSQL = fmt.Sprintf("%s, \"%s\"", colValsSQL, RemoveQuotesFromString(val))
-// 		}
-// 	} //for key, val := range colNamesValuesMap {
-// 	insert_sql = fmt.Sprintf("INSERT INTO '%s' \n\t(%s) \n\tVALUES (%s)",
-// 		tbl_name, colNamesSQL, colValsSQL)
-// 	// fmt.Println(insert_sql)
-// 	return insert_sql
-// } //func prepareInsertStatementFromMap(
 
 func prepareInsertStatementFromArray2(
 	tbl_name string,
@@ -144,13 +145,22 @@ func prepareInsertStatementFromArray2(
 	return insert_sql
 } //func prepareInsertStatementFromMap(
 
-func prepareInsertStatement(tx *sql.Tx, tableName string, colNames []string) *sql.Stmt {
+func prepareInsertStatement(tx *sql.Tx, tableName string, columnsArr *([]*XLsqlColumn)) *sql.Stmt {
+	//colNames []string
+
 	qMarksSQL := ""
 	//Reduce function is from: https://gosamples.dev/generics-reduce/
-	colNamesSQL := reduce(colNames, func(accum, value string) string {
+	// colNamesSQL := reduce(columnsArr, func(accum string, value *XLsqlColumn) string {
+	// 	qMarksSQL = qMarksSQL + "?,"
+	// 	return fmt.Sprintf("%s '%s',", accum, (*value).sqlColName)
+	// }, "")
+
+	colNamesSQL := ""
+	for _, column := range *columnsArr {
 		qMarksSQL = qMarksSQL + "?,"
-		return fmt.Sprintf("%s '%s',", accum, value)
-	}, "")
+		colNamesSQL = fmt.Sprintf("%s '%s',", colNamesSQL, column.sqlColName)
+	}
+
 	colNamesSQL = colNamesSQL[:len(colNamesSQL)-1]
 	qMarksSQL = qMarksSQL[:len(qMarksSQL)-1]
 	insString := fmt.Sprintf(
@@ -158,6 +168,9 @@ func prepareInsertStatement(tx *sql.Tx, tableName string, colNames []string) *sq
 		tableName,
 		colNamesSQL,
 		qMarksSQL)
+
+	// fmt.Printf("insString: %v\n", insString)
+
 	res, err := tx.Prepare(insString)
 	if err != nil {
 		log.Fatal(err)
