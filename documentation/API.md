@@ -4,31 +4,33 @@
 - [XLQL starlark API](#xlql-starlark-api)
 - [Overview](#overview)
 - [Global functions](#global-functions)
-    * [open_db](#open-db)
-    * [get_datetime_formatted](#get-datetime-formatted)
-    * [list_worksheets](#list-worksheets)
+    * [open_db](#open_db)
+    * [get_datetime_formatted](#get_datetime_formatted)
+    * [list_worksheets](#list_worksheets)
 - [Objects](#objects)
     * [Database object](#database-object)
         * [class database](#class-database)
-            * [load_excel_sheet](#load-excel-sheet)
-            * [get_tables](#get-tables)
+            * [load_excel_sheet](#load_excel_sheet)
+            * [get_tables](#get_tables)
+            * [exec_sql](#exec_sql)
     * [Query object](#query-object)
         * [class query](#class-query)
             * [print](#print)
-            * [get_cursor](#get-cursor)
-                * [save_to_excel](#save-to-excel)
+            * [get_cursor](#get_cursor)
+                * [save_to_excel](#save_to_excel)
     * [Cursor object](#cursor-object)
         * [class cursor](#class-cursor)
 
 <!-- tocstop -->
 
+
 # Overview
 XLQL exports for use in starlark scripts run with the application following global functions and objects
+
 
 # Global functions
 
 ## open_db
-
 
 *function* open_db(file_name string) _returns Database object_
     
@@ -51,11 +53,10 @@ Example format: "2006-Jan-02_15H04m05.00000"
     
     print(get_datetime_formatted("Mon, 02 Jan 2006 15:04:05 MST"))
 
-
-
 ## list_worksheets
 
 _function_ list_worksheets(xl_file_name string) _returns list of strings_
+
 
 # Objects
 ## Database object
@@ -156,3 +157,10 @@ Will save query to the excel worksheet with style
 ### class cursor
 Is needed to iterate through result of the query (see examples/example4.star).
 Only needed for iteration with 'for' loops
+
+
+<!-- 
+    "github.com/ycd/toc/pkg/toc" replaces "_" with "-" in TOC links. 
+    TODO: To check if this can be amended. In the meantime should be replaced manually
+
+ -->
