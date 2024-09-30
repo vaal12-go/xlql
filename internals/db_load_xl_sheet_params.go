@@ -21,13 +21,13 @@ func NewColumnParameter(func_param map[string]any) *columnParameter {
 
 	tp, ok := func_param["type"]
 	if ok {
-		fmt.Printf("reflect.TypeOf(tp): %v\n", reflect.TypeOf(tp))
+		// fmt.Printf("reflect.TypeOf(tp): %v\n", reflect.TypeOf(tp))
 		ret.Type = StripDoubleQuotes(tp.(starlark.String).String())
 	}
 
 	fm, ok := func_param["format"]
 	if ok {
-		fmt.Printf("reflect.TypeOf(fm): %v\n", reflect.TypeOf(fm))
+		// fmt.Printf("reflect.TypeOf(fm): %v\n", reflect.TypeOf(fm))
 		ret.Format = StripDoubleQuotes(fm.(starlark.String).String())
 	}
 	return &ret
@@ -201,28 +201,21 @@ func getParameters(args starlark.Tuple,
 			}
 		//case "table_range":
 		case "cols":
-			// DLf("Have cols parameter: %v\n", arg[1])
-			fmt.Printf("arg[1]: %v\n", arg[1])
-			// DLf("Have cols parameter: %t\n", arg[1])
+			// fmt.Printf("arg[1]: %v\n", arg[1])
 			colMap := arg[1].(*starlark.Dict)
 			// fmt.Printf("colMap.Keys(): %v\n", colMap.Keys())
-			fmt.Printf("colMap.Keys(): %v\n", colMap.Keys())
 			colRealMap := StarlarkDictToMap2(colMap)
-			fmt.Printf("colRealMap: %#v\n", colRealMap)
+			// fmt.Printf("colRealMap: %#v\n", colRealMap)
 			for key, val := range colRealMap {
-				fmt.Printf("key: %v\n", key)
-				// fmt.Printf("val: %#v ... %v\n", val, reflect.TypeOf(val))
+				// fmt.Printf("key: %v\n", key)
 				retVal := val
 				if reflect.TypeOf(val).String() == "*starlark.Dict" {
 					retVal = StarlarkDictToMap2(val.(*starlark.Dict))
 				} else {
 					return nil, fmt.Errorf("getParameters. Parsing cols parameter: non Dict 2nd level value. All values of 'cols' parameter dict should also be dicts.")
 				}
-
 				colParam := NewColumnParameter(retVal.(map[string]any))
-
-				fmt.Printf("colParam: %#v\n", colParam)
-
+				// fmt.Printf("colParam: %#v\n", colParam)
 				params.column_parameters_dict[key] = colParam
 
 				// fmt.Printf("col: %v\n", StripDoubleQuotes(col.String()))

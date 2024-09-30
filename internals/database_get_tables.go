@@ -6,9 +6,6 @@ import (
 	"go.starlark.net/starlark"
 )
 
-//[x] file is cleaned
-//[x]: review/update logging with logging levels
-
 func (self Database) get_tables_actual() []string {
 	retArr := make([]string, 0)
 	sql := `

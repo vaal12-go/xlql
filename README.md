@@ -16,16 +16,20 @@ xlql is a command line utility which aims to enable SQL queries and python like 
     * [API](#api)
     * [Releases](#releases)
     * [Thanks (libraries used)](#thanks-libraries-used)
+    * [Support](#support)
 
 <!-- tocstop -->
+
 
 ## Installation
 
 Download an executable for your platform from the [releases section](https://github.com/vaal12-go/xlql/releases).
 
+
 ## Basic use
 
 ``` xlql.exe -f file_to_execute.star ```
+
 
 ## Examples
 Super basic [Example 1](/examples/example.star)
@@ -42,8 +46,10 @@ will just load countries sheet from the Sample HR Database.xlsx and print it's c
 
 [Example 4](/examples/example4.star) shows in memory database creation and iteration via query.get_cursor method.
 
+
 ## Command line parameters
 See [command line parameters](command_line_params.md)
+
 
 ## Starlark language
 
@@ -57,13 +63,14 @@ For complete syntax and specification see [Starlark in Go: Language definition](
 
 
 ## SQLite version
-At the moment sqlite version statically linked into executable is **3.42.0** (https://www.sqlite.org/changes.html)
+At the moment sqlite version statically linked into executable is **3.46.1** (https://www.sqlite.org/changes.html). This corresponds to github.com/mattn/go-sqlite3 v1.14.23.
 So modern features of sqlite are supported like - RIGHT and FULL OUTER JOIN (2022).
 Next release (due June 2024) to be upgraded to latest version of sqlite (as driver (github.com/mattn/go-sqlite3) will allow).
 
 
 ## API
 See [API documentation page](/documentation/API.md)
+
 
 ## Releases
 See [Releases page](/documentation/releases.md)
@@ -73,11 +80,17 @@ See [Releases page](/documentation/releases.md)
 
 * [github.com/jedib0t/go-pretty/v6 v6.4.8](https://github.com/jedib0t/go-pretty/)
 * [github.com/joho/godotenv v1.5.1](https://github.com/joho/godotenv)
-* [github.com/mattn/go-sqlite3 v1.14.17](https://github.com/mattn/go-sqlite3)
+* [github.com/mattn/go-sqlite3 v1.14.23](https://github.com/mattn/go-sqlite3)
 * [github.com/xuri/excelize/v2 v2.8.0](https://github.com/xuri/excelize/v2)
 * [go.starlark.net v0.0.0-20231013162135-47c85baa7a64](https://github.com/google/starlark-go)
 
+## Support
 
+Discord of this software: https://discord.gg/tgYGNhpJwz
+Email for questions/suggestions/issues: oljeniel2023@gmail.com
+
+Please note that discord is preferred method to reach me regarding this repository/software. 
+Emails I will review sporadically. 
 
 <!-- SHA: ef3d60e066a01d110a3a17ea4d7b4cf68c638cc91205ac80479751794d17d866 -->
 

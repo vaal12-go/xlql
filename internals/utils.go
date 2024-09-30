@@ -46,7 +46,11 @@ func getStringValueFromInterface(val any) string {
 	case float64:
 		return strconv.FormatFloat(val.(float64), 'f', -1, 64)
 	case time.Time:
-		return val.(time.Time).Format("02-Jan-2006")
+		// return val.(time.Time).Format("02-Jan-2006")
+		//TODO: add check if there is second/minute/hour components and use RFC850 format in that case,
+		//    otherwise use only "02-Jan-2006" format
+		return val.(time.Time).Format(time.RFC850)
+
 	default:
 		log.Fatalf("getStringValueFromInterface - unknown type: %v/n %t/n",
 			val, val)

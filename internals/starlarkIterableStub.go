@@ -6,7 +6,6 @@ import (
 	"go.starlark.net/starlark"
 )
 
-//[x]: clean file
 //HIGH: review/update logging with logging levels
 
 type StarlarkIterableImplmentationStub struct {

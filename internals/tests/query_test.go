@@ -7,7 +7,6 @@ import (
 	"test.com/excel-ark/internals"
 )
 
-//[x]: clean file
 //HIGH: review/update logging with logging levels
 
 //TODO: make separate directory (package?) for tests and check how commands will execute there
@@ -27,9 +26,7 @@ var (
 )
 
 func TestQuery(t *testing.T) {
-
 	const KEY_NAME = "starlark_result_sha"
-
 	for starlark_file, expected_sha := range query_test_cases {
 		internals.Init(true, nil)
 		t.Logf("Runnin test file:%s\n", starlark_file)
