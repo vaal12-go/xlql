@@ -60,17 +60,14 @@ func NewDatabase(file_name string) *Database {
 
 func (self Database) dropTableIfExists(tblName string) error {
 	tbls := self.get_tables_actual()
-	// fmt.Printf("dropTableIfExists tbls: %v\n", tbls)
 	var err error = nil
 	if slices.Contains(tbls, tblName) {
-		// fmt.Printf("\"dropping table\": %v\n", "dropping table")
 		err = self.execSQLInternal(
 			`DROP TABLE ` + tblName)
 	}
 	return err
 }
 
-// TODO: add execSQL function for starlark
 func (self Database) execSQLInternal(sql_str string) error {
 	_, err := self.db_connection.Exec(sql_str)
 	if err != nil {
@@ -84,24 +81,16 @@ func (self Database) Exec_sql(thread *starlark.Thread,
 	b *starlark.Builtin,
 	args starlark.Tuple,
 	kwargs []starlark.Tuple) (starlark.Value, error) {
-
 	sql_str := ""
 	if err := starlark.UnpackArgs(
 		b.Name(), args, kwargs,
 		"sql?", &sql_str); err != nil {
 		return nil, err
 	}
-
 	if sql_str == "" {
-		// fmt.Printf("Fatal: sql parameter of exec_sql cannot be empty.\n")
 		return starlark.None, fmt.Errorf("sql parameter of exec_sql cannot be empty.")
 	}
-
-	// fmt.Printf("\"Exec SQL is running\": %v\n", "Exec SQL is running")
-	// fmt.Printf("sql_str: %v\n", sql_str)
-
 	err := self.execSQLInternal(sql_str)
-
 	return starlark.None, err
 } //func (self Database) Exec_sql(thread *starlark.Thread,
 
@@ -117,8 +106,6 @@ func (self Database) Run_query(thread *starlark.Thread,
 		fmt.Printf("run_query:%v\n", err)
 		return nil, err
 	}
-	// fmt.Printf("Executing SQL:%s\n", query_SQL)
-
 	//TODO: check need to add and commit transaction for each statement like below
 	// tx, err := self.db_connection.Begin()
 	// tx.Commit()
@@ -134,9 +121,7 @@ func (self Database) Run_query(thread *starlark.Thread,
 	// 	DLf("Database.Run_query. Error running query:%v\n", err)
 	// 	return nil, err
 	// }
-	// fmt.Printf("\"6\": %v\n", "6")
 	ret, err := NewQuery(&self, query_SQL, "")
-	// fmt.Printf("\"7\": %v\n", "7")
 	return ret, err
 } //func (self Database) run_query(thread *starlark.Thread,
 
@@ -150,7 +135,7 @@ func (self Database) Close() {
 
 func (self Database) AttrNames() []string {
 	ret := []string{"run_query", "load_excel_sheet",
-		"get_tables", "create_table"}
+		"get_tables", "create_table", "exec_sql"}
 	return ret
 }
 

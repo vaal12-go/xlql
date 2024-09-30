@@ -51,6 +51,8 @@ Example format: "2006-Jan-02_15H04m05.00000"
     
     print(get_datetime_formatted("Mon, 02 Jan 2006 15:04:05 MST"))
 
+
+
 ## list_worksheets
 
 _function_ list_worksheets(xl_file_name string) _returns list of strings_
@@ -61,16 +63,62 @@ _function_ list_worksheets(xl_file_name string) _returns list of strings_
 
 #### load_excel_sheet
 
-*method* load_excel_sheet(file_name string, sheet_name string, drop_table bool = False) *returns query object*
+*method* load_excel_sheet(file_name string, sheet_name string, drop_table bool = False, cols dict) *returns query object*
 
 parameters should be indicated by name, those are not positional.
 
 drop_table parameter is optional and is false by default. If true load_excel_sheet will drop the sqlite table with the name as derived from sheet_name and will load data from XL file into newly created table.
 
+cols is optional and a dictionary of the form 
+{
+        "ColName1" : {
+            "type" : "numeric"  #Types can be: "numeric" and "date"
+        },
+        "ColName2" : {
+            "type" : "date",
+            "format" : "2006-01-02" #Format is golang datetime format string as listed here: https://pkg.go.dev/time#pkg-constants - only year, month, day, hour, minute, second and AM/PM marks should be used (see below for convenience)
+        }
+}
+
+Date formatting which can be used in __"format"__ field of __"cols"__ parameter:
+* Year: "2006" "06"
+* Month: "Jan" "January" "01" "1"
+* Day of the month: "2" "_2" "02"
+* Day of the week: "Mon" "Monday"
+* Day of the year: "__2" "002"
+* Hour: "15" "3" "03" (PM or AM)
+* Minute: "4" "04"
+* Second: "5" "05"
+* AM/PM mark: "PM"
+
+   Please note that golang is pretty strict about time formatting, so although "2023-08-12" date string will perfectly match "2006-01-02" format string, "2023-08-12 00:00:00" date string will produce an error if parsed with "2006-01-02" format.
+
+   Parsing errors will be visible in SQLite file with the message (instead of date) like *"Cannot parse date:2023-08-12 00:00:00 with format:2006-01-02"*. If saved to excel, such message will produce incorrect date (*0001-01-01 00:00:00 +0000 UTC*, so called zero date in golang). This is due to the driver attempt to convert the date (which is an error string). To see an error in Excel use cast SQLite function. E.g. column "datetime_with_errors" in Sheet1 table contains errors: 
+
+        SELECT cast(datetime_with_errors As text) FROM Sheet1 
+   
+   will show actual errors in excel like below:
+
+        cast(datetime_with_errors As text)
+        Cannot parse date:2023-08-12 00:00:00 with format:2006-01-02 
+        Cannot parse date:2023-12-09 12:38:00 with format:2006-01-02 
+        Cannot parse date:2023-12-10 00:00:00 with format:2006-01-02 
+   
+In the example above ("2023-08-12 00:00:00" datetime value) will be perfectly parsed with "2006-01-02 03:04:05" format string.
+
+In future releases I will check for possibility to provide a custom parser function (user-written) to parse dates more reliably.
+
 #### get_tables
 
 _method_ get_tables() _returns list of strings_
 TBD
+
+#### exec_sql
+
+_method_ exec_sql(sql_statement string)
+
+Will execut SQL statement (e.g. "DROP TABLE sometable") which will not return any result.
+
 
 
 ## Query object

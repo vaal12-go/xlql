@@ -4,8 +4,8 @@ import (
 	"time"
 )
 
-//HIGH: clean file
-//HIGH: review/update logging with logging levels
+//[x]: clean file
+//[x]: review/update logging with logging levels
 
 // sql.Scanner interface: https://pkg.go.dev/database/sql#Scanner
 // Example: https://gist.github.com/jmoiron/6979540
@@ -18,7 +18,7 @@ type UniversalScanner struct {
 //
 //	Done for iterator
 //
-// TODO: to be tested with time values
+// [x]: to be tested with time values
 func (self *UniversalScanner) Scan(src interface{}) error {
 	if src == nil {
 		self.isNull = true
@@ -39,6 +39,7 @@ func (self *UniversalScanner) Scan(src interface{}) error {
 	case string:
 		self.internalValue = src.(string)
 	case time.Time:
+		//TODO: if in DB there is a string, then check for time.Time zero value and return error
 		self.internalValue = src.(time.Time)
 	}
 	return nil

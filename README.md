@@ -55,11 +55,12 @@ To quote from the site above
 
 For complete syntax and specification see [Starlark in Go: Language definition](https://github.com/google/starlark-go/blob/master/doc/spec.md#function-and-method-calls)
 
-
 ## SQLite version
-At the moment sqlite version statically linked into executable is **3.42.0** (https://www.sqlite.org/changes.html)
+At the moment sqlite version statically linked into executable is **3.46.1** (https://www.sqlite.org/changes.html). This corresponds to github.com/mattn/go-sqlite3 v1.14.23.
 So modern features of sqlite are supported like - RIGHT and FULL OUTER JOIN (2022).
 Next release (due June 2024) to be upgraded to latest version of sqlite (as driver (github.com/mattn/go-sqlite3) will allow).
+
+
 
 
 ## API
@@ -73,9 +74,18 @@ See [Releases page](/documentation/releases.md)
 
 * [github.com/jedib0t/go-pretty/v6 v6.4.8](https://github.com/jedib0t/go-pretty/)
 * [github.com/joho/godotenv v1.5.1](https://github.com/joho/godotenv)
-* [github.com/mattn/go-sqlite3 v1.14.17](https://github.com/mattn/go-sqlite3)
+* [github.com/mattn/go-sqlite3 v1.14.23](https://github.com/mattn/go-sqlite3)
 * [github.com/xuri/excelize/v2 v2.8.0](https://github.com/xuri/excelize/v2)
 * [go.starlark.net v0.0.0-20231013162135-47c85baa7a64](https://github.com/google/starlark-go)
+
+## Support
+
+Discord of this software: https://discord.gg/tgYGNhpJwz
+Email for questions/suggestions/issues: oljeniel2023@gmail.com
+
+Please note that discord is preferred method to reach me regarding this repository/software. 
+Emails I will review sporadically. 
+
 
 
 

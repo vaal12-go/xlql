@@ -28,6 +28,8 @@ var (
 	build_time        string
 )
 
+//[x]: query print does not print hours:minutes even if present
+
 func main() {
 	flag.StringVar(&fName, "f", "", "Starlark file to execute.")
 	flag.BoolVar(&printHelp, "h", false, "Print help message")
@@ -76,28 +78,8 @@ func main() {
 			fName = "test.star"
 		}
 	}
-
-	// excelizeFile, err := excelize.OpenFile("GoodBlueTableStyle_29Apr2024.xlsx")
-	// if err != nil {
-	// 	fmt.Printf("err: %v\n", err)
-	// 	panic(1)
-	// }
-
-	// tbls, err := excelizeFile.GetTables("Sheet1")
-	// if err != nil {
-	// 	fmt.Printf("Getting tables err: %v\n", err)
-	// 	panic(1)
-	// }
-
-	// for _, tbl := range tbls {
-	// 	fmt.Printf("tbl: %v\n", tbl)
-	// }
-
-	// panic(1)
-
 	var extSlice *[]string = nil
 	if sqlite_extensions != "" {
-		// fmt.Printf("sqlite_extensions: %v\n", sqlite_extensions)
 		extSlc := strings.Split(sqlite_extensions, "?")
 		extSlice = &extSlc
 	}
@@ -109,4 +91,4 @@ func main() {
 	internals.Close()
 } //func main() {
 
-//SHA256-9cd7c8b6e0e7cf266accf920c4ec53d133e0e5f5eb3635506140ee8ef7a514d0
+//SHA-512: c46c48ddaccc53835237b551df240c1dc51ca78911fdec845481c04bb2bb438b71ed15431131850dd2654a136047dbe3129c728d4148f971d3bc0d7568124a86

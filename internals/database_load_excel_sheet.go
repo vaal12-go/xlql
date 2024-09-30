@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/xuri/excelize/v2"
 	"go.starlark.net/starlark"
@@ -27,6 +28,7 @@ func printColArr(colArr *[]*XLsqlColumn) {
 	}
 }
 
+// HIGH: add test routines for datetime parsing
 func (self Database) Load_excel_sheet(thread *starlark.Thread,
 	b *starlark.Builtin,
 	args starlark.Tuple,
@@ -156,6 +158,8 @@ func (self Database) IterateDataRows(params *loadExceSheetParams,
 				if len(colCell) == 0 { //Empty cell - NULL value
 					anySlice = append(anySlice, nil)
 				} else { //Non empty cell - processing further
+					// fmt.Printf("sqlColTypes[tableColNo].DatabaseTypeName(): %v\n", sqlColTypes[tableColNo].DatabaseTypeName())
+					// fmt.Printf("colCell: %v\n", colCell)
 					switch sqlColTypes[tableColNo].DatabaseTypeName() {
 					case "TEXT":
 						anySlice = append(anySlice, colCell)
@@ -184,6 +188,23 @@ func (self Database) IterateDataRows(params *loadExceSheetParams,
 							} //if err == nil {//Can convert to Float
 						} //if err == nil {//Can convert to INT
 					//case "NUMERIC":
+
+					case "DATE":
+						// fmt.Printf("\"Have date. Will convert\": %v\n", "Have date. Will convert")
+						// fmt.Printf("(*columnsArr)[colNo]: %v\n", (*columnsArr)[colNo])
+						// fmt.Printf("(*columnsArr)[colNo].colParameter.Format: %v\n", (*columnsArr)[colNo].colParameter.Format)
+						tm, err := time.Parse(
+							(*columnsArr)[colNo].colParameter.Format,
+							colCell)
+						if err != nil {
+							errStr := fmt.Sprintf("Cannot parse date:%v with format:%s\n",
+								colCell, (*columnsArr)[colNo].colParameter.Format)
+							fmt.Print(errStr)
+							anySlice = append(anySlice, errStr)
+						} else {
+							anySlice = append(anySlice, tm)
+						}
+					//case "DATE":
 
 					default:
 						anySlice = append(anySlice, colCell)

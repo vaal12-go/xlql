@@ -4,9 +4,6 @@ import (
 	"go.starlark.net/starlark"
 )
 
-// [x]: clean file
-//[x]: review/update logging with logging levels
-
 func open_db(thread *starlark.Thread,
 	b *starlark.Builtin,
 	args starlark.Tuple,
