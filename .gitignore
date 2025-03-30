@@ -1,8 +1,9 @@
-build/xlql.exe
+build/**
 logs.log
 *.sqlite
 internals/tests/*.sqlite3
 UsefulPrograms/**
 internals/tests/test_cases/01.Simple_examples.ods
-internals/tests/test_cases/.~lock.01.Simple_examples.ods#
+internals/tests/test_cases/.~lock*
 /*.xlsx
+.vscode/**

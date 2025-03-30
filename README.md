@@ -78,11 +78,12 @@ See [Releases page](/documentation/releases.md)
 
 ## Thanks (libraries used)
 
+* [github.com/qax-os/excelize v2.9.0](https://github.com/qax-os/excelize)
+    If you find this program useful, please support this amazing library and a lot of work to bring Golang world to Excel (and vice versa). [Support link](https://github.com/qax-os/excelize/wiki/One-time-Donations).
+* [go.starlark.net v0.0.0-20231013162135-47c85baa7a64](https://github.com/google/starlark-go)
 * [github.com/jedib0t/go-pretty/v6 v6.4.8](https://github.com/jedib0t/go-pretty/)
 * [github.com/joho/godotenv v1.5.1](https://github.com/joho/godotenv)
 * [github.com/mattn/go-sqlite3 v1.14.23](https://github.com/mattn/go-sqlite3)
-* [github.com/xuri/excelize/v2 v2.8.0](https://github.com/xuri/excelize/v2)
-* [go.starlark.net v0.0.0-20231013162135-47c85baa7a64](https://github.com/google/starlark-go)
 
 ## Support
 
