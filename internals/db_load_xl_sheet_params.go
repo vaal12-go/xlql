@@ -121,7 +121,7 @@ func getParameters(args starlark.Tuple,
 		calc_header_start_row:  -1,
 		calc_header_start_col:  -1,
 		calc_data_start_row:    -1,
-		calc_data_start_col:    -1,
+		calc_data_start_col:    -1, 
 	}
 
 	// fmt.Printf("args: %v\n", args)

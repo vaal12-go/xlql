@@ -1,6 +1,9 @@
 print("This is an example file")
 
-hrDB = open_db("hr_db2.sqlite")
+hrDB = open_db(
+    "hr_db2.sqlite"
+    ,delete_db_if_exists = True
+)
 
 departments_q = hrDB.load_excel_sheet(
     file_name = "Sample HR Database.xlsx",
@@ -31,7 +34,5 @@ combined_query.save_to_excel(
     "employee_dpt_%s.xlsx" % get_datetime_formatted(), 
     "employee_departments"
 )
-
-
 
 combined_query.print()

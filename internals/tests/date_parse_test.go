@@ -8,7 +8,7 @@ import (
 	"test.com/excel-ark/internals"
 )
 
-// TO run: go test ./internals/tests/date_parse_test.go -v
+// TO run:
 
 var (
 	date_parse_test_cases = map[string]string{

@@ -4,7 +4,10 @@
 # .dll of extension also available in sqliteextensions folder of this repository
 
 dbName = "pivotDB.sqlite3"
-newDB = open_db(dbName)
+newDB = open_db(
+    dbName
+    ,delete_db_if_exists = True
+)
 
 
 newDB.load_excel_sheet(file_name = "pivot_source_data.xlsx", 

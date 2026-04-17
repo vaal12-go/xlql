@@ -33,6 +33,8 @@ func ExecStarlarkFile(fName string) *starlark.StringDict {
 			msg2Print = err.(syntax.Error).Error()
 		case *starlark.EvalError:
 			msg2Print = (err.(*starlark.EvalError)).Backtrace()
+		default:
+			msg2Print = err.Error()
 		}
 		log.Fatalf("\n!!!!!!\n%v\n", msg2Print)
 	}

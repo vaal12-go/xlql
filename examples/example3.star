@@ -22,7 +22,10 @@ def taylor_sin(x, polynom_grade):
         ret = ret + (sign*nominator)/denominator
     return ret
 
-sinDB = open_db("sin_db.sqlite")
+sinDB = open_db(
+    "sin_db.sqlite"
+    ,delete_db_if_exists = True
+)
 
 sin_q = sinDB.create_table(
     name = "sinus_table",

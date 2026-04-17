@@ -17,9 +17,8 @@ import (
 
 var (
 	query_test_cases = map[string]string{
-		"./test_cases/query_test.star":        "2d3e7fc8284ea9805a41fd54cbbf07aec3365b925fbabe90a29769dc7a997109",
-		"./test_cases/excel_load_simple.star": "ad211fb93f6948a9111606f217f178ad1f0cc0baf20a2ba3ad9e46d9e2a7a8ad",
-		//06May2024 SHA change due to SkipRows worksheet change
+		"./test_cases/query_test.star":           "2d3e7fc8284ea9805a41fd54cbbf07aec3365b925fbabe90a29769dc7a997109",
+		"./test_cases/excel_load_simple.star":    "ad211fb93f6948a9111606f217f178ad1f0cc0baf20a2ba3ad9e46d9e2a7a8ad",
 		"./test_cases/excel_load_skip_rows.star": "6aa5aaf2e4eb1a575e81c89153119622a54b0e681eea2d4947ef3f275491ab18",
 		"./test_cases/excel_load_range.star":     "2d3e7fc8284ea9805a41fd54cbbf07aec3365b925fbabe90a29769dc7a997109",
 	}

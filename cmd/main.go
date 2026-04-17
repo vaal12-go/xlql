@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -27,8 +28,6 @@ var (
 	ver_sqlite        string
 	build_time        string
 )
-
-//[x]: query print does not print hours:minutes even if present
 
 func main() {
 	flag.StringVar(&fName, "f", "", "Starlark file to execute.")
@@ -77,6 +76,19 @@ func main() {
 		} else {
 			fName = "test.star"
 		}
+	}
+
+	// https://stackoverflow.com/questions/12518876/how-to-check-if-a-file-exists-in-go
+	if _, err := os.Stat(fName); err == nil {
+		// fmt.Printf("File exists")
+	} else if errors.Is(err, os.ErrNotExist) {
+		// path/to/whatever does *not* exist
+		fmt.Printf("File '%s' DOES NOT exist. Exiting.\n", fName)
+		os.Exit(1)
+
+	} else {
+		fmt.Printf("File may or may not exist. Will proceed with processing file, though it may fail.")
+		// Schrodinger: file may or may not exist. See err for details.
 	}
 	var extSlice *[]string = nil
 	if sqlite_extensions != "" {
