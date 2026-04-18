@@ -1,6 +1,14 @@
 # Releases
 
 
+## 2026Apr17
+
+* open_db function accepts delete_db_if_exists optional parameter, which will delete db file (if such exists) before opening it for new.
+    * Test coverage added
+* Error message prints now print out all the errors encountered.
+* Added check for .star file to exist before execution with appropriate error message.
+* Small code cleans
+
 ## 28Mar2025 
 
 * now development will be done in golang v1.23+
