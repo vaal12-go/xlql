@@ -98,7 +98,7 @@ func (self Database) Run_query(thread *starlark.Thread,
 	b *starlark.Builtin,
 	args starlark.Tuple,
 	kwargs []starlark.Tuple) (starlark.Value, error) {
-	//TODO add parameter that this is query without result or add other function something like run_sql
+	//[x] add parameter that this is query without result or add other function something like run_sql
 	query_SQL := ""
 	if err := starlark.UnpackArgs(
 		b.Name(), args, kwargs,
@@ -113,14 +113,6 @@ func (self Database) Run_query(thread *starlark.Thread,
 	if err != nil {
 		return nil, err
 	}
-	// _, err := self.db_connection.Exec(query_SQL)
-
-	// res, err = self.db_connection.Exec("COMMIT TRANSACTION")
-
-	// if err != nil {
-	// 	DLf("Database.Run_query. Error running query:%v\n", err)
-	// 	return nil, err
-	// }
 	ret, err := NewQuery(&self, query_SQL, "")
 	return ret, err
 } //func (self Database) run_query(thread *starlark.Thread,

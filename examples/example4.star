@@ -1,7 +1,9 @@
 #Example of query.get_cursor iteration
 #Based on in_mem_db.star
 
-inMemDB = open_db("file:memdb1?mode=memory&cache=shared")
+inMemDB = open_db(
+    "file:memdb1?mode=memory&cache=shared"
+)
 mem_tbl = inMemDB.create_table(
     name = "qwe1",
     columns = {
