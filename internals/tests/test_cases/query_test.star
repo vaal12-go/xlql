@@ -1,6 +1,7 @@
 
 # newDB = open_db(file_name ="newDB.sqlite3")
-newDB = open_db(file_name ="file:memdb1?mode=memory&cache=shared")
+newDB = open_db(
+    file_name ="file:memdb1?mode=memory&cache=shared")
 fName = "test_cases/01.Simple_examples.xlsx"
 shName = "TableRange"
 # print("Excel file name:", fName)

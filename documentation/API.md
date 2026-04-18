@@ -32,13 +32,17 @@ XLQL exports for use in starlark scripts run with the application following glob
 
 ## open_db
 
-*function* open_db(file_name string) _returns Database object_
+*function* open_db(file_name string, delete_db_if_exists bool) _returns Database object_
     
 Will open/create sqlite database [file_name]. Can be absolute or relative path. If file does not exists - will create one.
 
 As for most parameters this one is positional - parameter name can be omitted e.g.: 
     
-    open_db("qwe1.sqlite")
+```python
+open_db("qwe1.sqlite")
+```
+
+delete_db_if_exists is an optional parameter, which will delete DB file (if one exists) do avoid further conflicts with data population (table creation and data updates)
 
 ## get_datetime_formatted
 
