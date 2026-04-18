@@ -3,6 +3,9 @@ db = open_db("file:memdb1?mode=memory&cache=shared")
 fName = "./test_cases/01.Simple_examples.xlsx"
 shName = "DateTime"
 
+# TODO: this gives out an error while running
+   # Cannot parse date:2023-08-12 00:00:00 with format:2006-01-02
+
 q1 = db.load_excel_sheet(
     fName,
     shName,

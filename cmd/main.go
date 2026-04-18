@@ -42,7 +42,7 @@ func main() {
 		return
 	}
 	if printVersion {
-		ver_str := fmt.Sprintf("%s \n\tversion:%s (build time:%s UTC+3) %s \n\tsqlite version:%s\n",
+		ver_str := fmt.Sprintf("%s \n\tversion:%s (build time:%s) %s \n\tsqlite version:%s\n",
 			VER_STRING, version, build_time, build_date, ver_sqlite)
 		if ver_codename != "" {
 			ver_str = ver_str + "\tcodename:" + ver_codename

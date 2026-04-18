@@ -28,7 +28,18 @@ Download an executable for your platform from the [releases section](https://git
 
 ## Basic use
 
-``` xlql.exe -f file_to_execute.star ```
+```console
+xlql.exe -f file_to_execute.star
+```
+
+## Running development version
+Prerequisites:
+* Golang is required (current [2026Apr18] development version is 1.23.6)
+* GCC toolchain is required for [mattn/go-sqlite3](https://github.com/mattn/go-sqlite3) driver compilation for your platform. See [Installation](https://github.com/mattn/go-sqlite3#installation) section of the docs.
+
+```console
+go run ./cmd/main.go
+```
 
 
 ## Examples
@@ -63,9 +74,9 @@ For complete syntax and specification see [Starlark in Go: Language definition](
 
 
 ## SQLite version
-At the moment sqlite version statically linked into executable is **3.46.1** (https://www.sqlite.org/changes.html). This corresponds to github.com/mattn/go-sqlite3 v1.14.23.
+At the moment sqlite version statically linked into executable is [**3.51.3**](https://www.sqlite.org/changes.html) of [2026-03-13](https://sqlite.org/releaselog/3_51_3.html). This corresponds to github.com/mattn/go-sqlite3 v1.14.42.
 So modern features of sqlite are supported like - RIGHT and FULL OUTER JOIN (2022).
-Next release (due June 2024) to be upgraded to latest version of sqlite (as driver (github.com/mattn/go-sqlite3) will allow).
+
 
 
 ## API
@@ -73,7 +84,10 @@ See [API documentation page](/documentation/API.md)
 
 
 ## Releases
-See [Releases page](/documentation/releases.md)
+See [Releases](/documentation/releases.md) page
+
+## SQLite version upgrades
+See [SQLite driver and version upgrade](/documentation/build_instructions/upgrade_sqlite.md) page
 
 
 ## Thanks (libraries used)

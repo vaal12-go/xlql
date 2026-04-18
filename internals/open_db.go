@@ -22,12 +22,12 @@ func open_db(thread *starlark.Thread,
 	// fmt.Println("open_db:26 del_if_exists::", del_if_exists)
 	if del_if_exists {
 		if _, err := os.Stat(fName); err == nil {
-			fmt.Printf("DB File '%s' exists. Will attempt deletion.", fName)
+			fmt.Printf("DB File '%s' exists. Will attempt deletion.\n", fName)
 			if err := os.Remove(fName); err != nil {
 				fmt.Printf("Cannot delete DB file '%s'. Possibly locked by other application. Exiting.")
 				log.Fatal(err)
 			}
-			fmt.Printf("File '%s' is deleted. Proceeding with creation of new DB.", fName)
+			fmt.Printf("File '%s' is deleted. Proceeding with creation of new DB file.\n", fName)
 		} else if errors.Is(err, os.ErrNotExist) {
 			// path/to/whatever does *not* exist
 			fmt.Printf("DB File '%s' DOES NOT exist. Exiting.\n", fName)
