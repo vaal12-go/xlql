@@ -1,5 +1,10 @@
 # Releases
 
+## 2026Apr19
+* Database object is fully documented in API docs
+* Example (example_db_object.star) created to demonstrate database object methods in action
+* Cleaning of internals/database.go file, also of starlark_exports.go, starlarkValueStub.go  
+
 ## 2026Apr18
 * upgraded [github.com/mattn/go-sqlite3](https://github.com/mattn/go-sqlite3) v1.14.24 => v1.14.42
 * the above updates SQLite version to [3.51.3](https://sqlite.org/releaselog/3_51_3.html)

@@ -116,7 +116,10 @@ In future releases I will check for possibility to provide a custom parser funct
 #### get_tables
 
 _method_ get_tables() _returns list of strings_
-TBD
+
+Will return a list of table names in the database. 
+
+See [example_db_object.star](../examples/example_db_object.star) example.
 
 #### exec_sql
 
@@ -124,6 +127,40 @@ _method_ exec_sql(sql_statement string)
 
 Will execut SQL statement (e.g. "DROP TABLE sometable") which will not return any result.
 
+#### run_query
+
+_method_ run_query(query string)
+
+This method will execute query against the database and return query object.
+
+See [example_db_object.star](../examples/example_db_object.star) example.
+
+
+#### create_table
+
+_method_ create_table(name string, columns dict, auto_rename_table_name bool, drop_table bool)
+
+Will create a new table in the DB with 'name'.
+
+columns dictionary is starlark dictionary of column names and DB types e.g.:
+
+```python
+tbl3 = inMemDB.create_table(
+    name = "SMPL_TBL3",
+    columns = {
+        "TXT_COL1": "TEXT",
+        "NUM_COL1": "NUMERIC"
+    },
+    auto_rename_table_name = True,
+    drop_table = False
+)
+```
+
+auto_rename_table_name in case of existing table with the same name will attempt to rename the table to something like 'name_0' if this exists to 'name_1' etc.
+
+drop_table in case of existing table with the same name will drop the existing table before creating new one.
+
+See [example_db_object.star](../examples/example_db_object.star) example.
 
 
 ## Query object

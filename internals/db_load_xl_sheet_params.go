@@ -33,7 +33,7 @@ func NewColumnParameter(func_param map[string]any) *columnParameter {
 	return &ret
 }
 
-type loadExceSheetParams struct {
+type LoadExceSheetParams struct {
 	excel_file_name        string
 	sheet_name             string
 	skip_rows              int64
@@ -59,16 +59,14 @@ type loadExceSheetParams struct {
 	calc_data_start_col    int64
 }
 
-func (esp loadExceSheetParams) SHA256() string {
+func (esp LoadExceSheetParams) SHA256() string {
 	hash := sha256.New() // Use the Hash in crypto/sha256
 	hash.Write([]byte(esp.String()))
 	sha_str := fmt.Sprintf("%x", hash.Sum(nil)) // Get encoded hash sum
 	return sha_str
-	// fmt.Printf("loadExceSheetParams sha_str: %v\n", sha_str)
 }
 
-// [x]: Rework this using reflection
-func (self loadExceSheetParams) String() string {
+func (self LoadExceSheetParams) String() string {
 	tp := reflect.TypeOf(self)
 	VALUE_START_POS := 25
 
@@ -99,13 +97,13 @@ func (self loadExceSheetParams) String() string {
 		// 	reflect.ValueOf(params).FieldByIndex([]int{i}))
 	} //for i := 0; i < (tp).NumField(); i++ {
 	return ret
-} //func (self loadExceSheetParams) String() string {
+} //func (self LoadExceSheetParams) String() string {
 
-//TODO: make loadExceSheetParams fields same name as load_excel_sheet parameter names
+//TODO: make LoadExceSheetParams fields same name as load_excel_sheet parameter names
 
-func getParameters(args starlark.Tuple,
-	kwargs []starlark.Tuple) (*loadExceSheetParams, error) {
-	params := loadExceSheetParams{
+func GetParameters(args starlark.Tuple,
+	kwargs []starlark.Tuple) (*LoadExceSheetParams, error) {
+	params := LoadExceSheetParams{
 		excel_file_name:        "",
 		sheet_name:             "",
 		skip_rows:              0,
@@ -121,7 +119,7 @@ func getParameters(args starlark.Tuple,
 		calc_header_start_row:  -1,
 		calc_header_start_col:  -1,
 		calc_data_start_row:    -1,
-		calc_data_start_col:    -1, 
+		calc_data_start_col:    -1,
 	}
 
 	// fmt.Printf("args: %v\n", args)
@@ -150,7 +148,8 @@ func getParameters(args starlark.Tuple,
 
 	// fmt.Printf("params After args parsing: %v\n", params)
 
-	//Below will not work as it checks for passed keyword arguments and if cannot find it panics
+	//Below will not work as it checks for passed keyword
+	// arguments and if cannot find it panics
 	// if err := starlark.UnpackArgs(
 	// 	b.Name(), args, kwargs,
 	// 	"auto_rename_table_name?",

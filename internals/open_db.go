@@ -19,7 +19,6 @@ func open_db(thread *starlark.Thread,
 		"delete_db_if_exists?", &del_if_exists); err != nil {
 		return nil, err
 	}
-	// fmt.Println("open_db:26 del_if_exists::", del_if_exists)
 	if del_if_exists {
 		if _, err := os.Stat(fName); err == nil {
 			fmt.Printf("DB File '%s' exists. Will attempt deletion.\n", fName)

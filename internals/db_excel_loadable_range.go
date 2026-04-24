@@ -8,7 +8,7 @@ import (
 
 //[x]: clean file
 
-func calcExcelLoadableRange(params *loadExceSheetParams) error {
+func calcExcelLoadableRange(params *LoadExceSheetParams) error {
 	if params.table_range_start != "" { //This is table range situation
 		if params.skip_rows > 0 {
 			return fmt.Errorf("calcExcelLoadableRange. table_range cannot be used with skip_rows in load_excel_sheet")
@@ -58,4 +58,4 @@ func calcExcelLoadableRange(params *loadExceSheetParams) error {
 		}
 	} //} else { //Simple table situation
 	return nil
-} //func calcExcelLoadableRange(params *loadExceSheetParams) error {
+} //func calcExcelLoadableRange(params *LoadExceSheetParams) error {

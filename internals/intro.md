@@ -1,8 +1,5 @@
 # Excel-SQL
 
-
-
-
 ## Overview
 
 Excel-SQL is a command line utility which aims to provide programmatical access to Excel files by exporting those to sqlite database and exeuting programs in python like language (starlark) against such databases.

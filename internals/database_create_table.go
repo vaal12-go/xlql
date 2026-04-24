@@ -6,6 +6,8 @@ import (
 	starlark "go.starlark.net/starlark"
 )
 
+// HIGH: clean file
+
 // HIGH: limit debug messages in production using logging priorities
 //
 //	https://www.honeybadger.io/blog/golang-logging/
@@ -67,15 +69,18 @@ func (self Database) Create_table(thread *starlark.Thread,
 	// printColArr(&columnsArr)
 
 	tblNameActual, err := self.createTable(
-		tblName, &columnsArr, auto_rename_table_name)
+		tblName,
+		&columnsArr,
+		auto_rename_table_name)
 	// colNamesArray = append(colNamesArray, "qwe1") //colNamesArray is not needed - remove if not needed
 	if err != nil {
 		return starlark.None, err
 	}
+
+	// HIGH: add a name field to the query object, which will contain table name (for actual tables) or UUID for queries
+	// HIGH: add is_db_table field to query object, which will be true for actual DB tables and false for just queries
 	ret, err := NewQuery(&self,
 		fmt.Sprintf("SELECT * FROM %s", tblNameActual),
 		tblNameActual)
 	return ret, err
-
-	// return starlark.None, nil //THIS IS DEBUG
 } //func (self Database) create_table(thread *starlark.Thread,

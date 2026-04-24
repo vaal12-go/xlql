@@ -5,7 +5,6 @@ package internals
 import (
 	"log"
 
-	// "github.com/gofiber/fiber/v2/log"
 	"go.starlark.net/starlark"
 	syntax "go.starlark.net/syntax"
 )
@@ -64,8 +63,8 @@ func RegisterExportedFunctions(DefaultDBName string) {
 		starlark.NewBuiltin("get_datetime_formatted",
 			get_datetime_formatted)
 
-		//TODO: consider if 'defaultDB' is needed at all
-	DefaultDB = NewDatabase(DefaultDBName) //[x]: remove default DB?
+	//TODO: consider if 'defaultDB' is needed at all
+	DefaultDB = NewDatabase(DefaultDBName)
 	PredeclaredDict["defaultDB"] =
 		DefaultDB
 } //func RegisterExportedFunctions(DefaultDBName string) {

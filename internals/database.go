@@ -9,8 +9,6 @@ import (
 	"go.starlark.net/starlark"
 )
 
-//TODO: clean file
-
 // TODO: review/update logging with logging levels
 // LOW: to consider if this id_counter is needed at all
 var id_counter = 0
@@ -38,7 +36,7 @@ var database_export_fields_array = []string{
 	"Exec_sql",
 }
 
-// TODO: check if buiiltins can be implemented with a map - e.g. map of starlark name as key and builtin itself as value
+// TODO: check if builtins can be implemented with a map - e.g. map of starlark name as key and builtin itself as value
 //
 //	this way Attr will also be simpler
 func NewDatabase(file_name string) *Database {
@@ -51,12 +49,10 @@ func NewDatabase(file_name string) *Database {
 	}
 	//below var is necessary to get proper pointer to ret
 	var iFacePointer interface{} = ret
-	// ret.exporter.RegisterBuiltIns(&iFacePointer,
-	// 	[]string{"Run_query", "Load_excel_sheet", "Get_tables", "Create_table"})
 	ret.exporter.RegisterBuiltIns(&iFacePointer,
 		database_export_fields_array)
 	return &ret
-} //func NewDatabase(file_name string) *Database {
+}
 
 func (self Database) dropTableIfExists(tblName string) error {
 	tbls := self.get_tables_actual()
@@ -69,13 +65,15 @@ func (self Database) dropTableIfExists(tblName string) error {
 }
 
 func (self Database) execSQLInternal(sql_str string) error {
+	// TODO: move error handling to upper levels (e.g. for creation of
+	//   tables this error should be suppressed and not printed to console)
 	_, err := self.db_connection.Exec(sql_str)
 	if err != nil {
 		fmt.Printf("execSQLInternal. Error executing query:%s \n\terr: %v\n", sql_str, err)
 		return err
 	}
 	return err
-} //func (self Database) execSQLInternal(sql_str string) {
+}
 
 func (self Database) Exec_sql(thread *starlark.Thread,
 	b *starlark.Builtin,
@@ -92,13 +90,12 @@ func (self Database) Exec_sql(thread *starlark.Thread,
 	}
 	err := self.execSQLInternal(sql_str)
 	return starlark.None, err
-} //func (self Database) Exec_sql(thread *starlark.Thread,
+}
 
 func (self Database) Run_query(thread *starlark.Thread,
 	b *starlark.Builtin,
 	args starlark.Tuple,
 	kwargs []starlark.Tuple) (starlark.Value, error) {
-	//[x] add parameter that this is query without result or add other function something like run_sql
 	query_SQL := ""
 	if err := starlark.UnpackArgs(
 		b.Name(), args, kwargs,
@@ -115,7 +112,7 @@ func (self Database) Run_query(thread *starlark.Thread,
 	}
 	ret, err := NewQuery(&self, query_SQL, "")
 	return ret, err
-} //func (self Database) run_query(thread *starlark.Thread,
+}
 
 func (self Database) Attr(name string) (starlark.Value, error) {
 	return self.exporter.GetMethod(name)

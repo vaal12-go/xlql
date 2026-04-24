@@ -14,7 +14,7 @@ import (
 
 //TODO: clean file.
 
-func getColumnNamesCoords(params *loadExceSheetParams) (x_start int64, y_start int64, colNumber int64) {
+func getColumnNamesCoords(params *LoadExceSheetParams) (x_start int64, y_start int64, colNumber int64) {
 	if params.skip_rows > 0 { //skip_rows are used
 		return 1, params.skip_rows + 1, -1
 	} else if (params.table_range_start_x > 0) ||
@@ -26,11 +26,11 @@ func getColumnNamesCoords(params *loadExceSheetParams) (x_start int64, y_start i
 		return 1, 1, -1
 	} //if params.skip_rows > 0 { //skip_rows are used/
 	return -1, -1, -1
-} //func getColumnNamesCoords(params *loadExceSheetParams) (x_start int64, y_start int64, colNumber int64) {
+} //func getColumnNamesCoords(params *LoadExceSheetParams) (x_start int64, y_start int64, colNumber int64) {
 
 func getColTypes(values_start_x int64,
 	values_start_y int64, values_number int64,
-	params *loadExceSheetParams, colArray *[]*XLsqlColumn) error {
+	params *LoadExceSheetParams, colArray *[]*XLsqlColumn) error {
 	//TODO: remake so getColTypes returns error instead of []string
 	//TODO: replace values_start_x int64, 	values_start_y int64, values_number int64, with params.calc_header_start_col, params.calc_header_start_row
 	// retArr := make([]string, 0)
@@ -91,10 +91,10 @@ func getColTypes(values_start_x int64,
 
 // TODO: to rethink structure of this maybe scanning of excel and then getting names and columns types should be separated
 // Also separate column scanning will require a rewrite
-// func getColumnNamesAndTypes(params *loadExceSheetParams) (colNames []string,
+// func getColumnNamesAndTypes(params *LoadExceSheetParams) (colNames []string,
 // 	colTypes []string, err error) {
 
-func getColumnNamesAndTypes(params *loadExceSheetParams) (columnsArr *[]*XLsqlColumn, err error) {
+func getColumnNamesAndTypes(params *LoadExceSheetParams) (columnsArr *[]*XLsqlColumn, err error) {
 	// fmt.Printf("getColumnNamesAndTypes. params: %v\n", params)
 	retArr := make([]*XLsqlColumn, 0)
 

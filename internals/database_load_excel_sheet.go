@@ -11,7 +11,6 @@ import (
 	"go.starlark.net/starlark"
 )
 
-// [x]: load_excel_sheet - file_name and sheet_name should be used without param names
 // TODO: load_excel_sheet - sheet_name if not indicated - first sheet of the file should be used
 
 type XLsqlColumn struct {
@@ -34,7 +33,7 @@ func (self Database) Load_excel_sheet(thread *starlark.Thread,
 	args starlark.Tuple,
 	kwargs []starlark.Tuple) (starlark.Value, error) {
 
-	params, err := getParameters(args, kwargs)
+	params, err := GetParameters(args, kwargs)
 	if err != nil {
 		ErrorLogger.Printf("Error getting parameters for load_excel_sheet: %v\n", err)
 		return starlark.None, err
@@ -116,7 +115,7 @@ func (self Database) Load_excel_sheet(thread *starlark.Thread,
 	return ret, nil
 } //func (self *Database) load_excel_sheet(thread *starlark.Thread,
 
-func (self Database) IterateDataRows(params *loadExceSheetParams,
+func (self Database) IterateDataRows(params *LoadExceSheetParams,
 	columnsArr *[]*XLsqlColumn,
 	insertStatement *sql.Stmt,
 	query_sql string) error {
@@ -224,4 +223,4 @@ func (self Database) IterateDataRows(params *loadExceSheetParams,
 		// } //if rowNo >= int(valStartY) { //we are in the value row
 	} //for rowNo := 1; rows.Next(); rowNo++ {
 	return nil
-} //func (self Database) IterateDataRows(params *loadExceSheetParams,
+} //func (self Database) IterateDataRows(params *LoadExceSheetParams,
