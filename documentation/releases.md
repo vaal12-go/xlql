@@ -1,5 +1,12 @@
 # Releases
 
+## 2026Jun07
+* golang updated to and tested 1.26.4
+* github.com/mattn/go-sqlite3 upgraded to v1.14.45
+    * SQLite version [3.53.2](https://sqlite.org/releaselog/3_53_2.html) is supported by this version
+* github.com/xuri/excelize/v2 updated to version [v2.10.1](https://github.com/qax-os/excelize/releases/tag/v2.10.1)
+
+
 ## 2026Apr19
 * Database object is fully documented in API docs
 * Example (example_db_object.star) created to demonstrate database object methods in action

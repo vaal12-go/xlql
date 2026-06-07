@@ -4,7 +4,7 @@ All commands from root folder.
 
 internals tests:
 ```console
-go test ./internals/tests/date_parse_test.go -v
+go test ./internals/tests/ -v
 ```
 
 API tests
